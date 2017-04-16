@@ -64,6 +64,12 @@ func (p *Pact) ShouldSend(actual interface{}, expected ...interface{}) string {
 	return p.shouldSend(expected[0], target)
 }
 
+func (p *Pact) ShouldSendSomething(actual interface{}, _ ...interface{}) string {
+	p.checkActualObject(actual)
+
+	return p.shouldSend(nil, nil)
+}
+
 // TODO: Add a timeout parameter.
 //       Otherwise this will not work for long running "reactions".
 func (p *Pact) ShouldNotReact(actual interface{}, _ ...interface{}) string {
