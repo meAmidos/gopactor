@@ -2,16 +2,16 @@ package pact
 
 import "fmt"
 
-func (p *Pact) StartLogging() {
-	p.LoggingOn = true
+func (catcher *Catcher) StartLogging() {
+	catcher.LoggingOn = true
 }
 
-func (p *Pact) StopLogging() {
-	p.LoggingOn = false
+func (catcher *Catcher) StopLogging() {
+	catcher.LoggingOn = false
 }
 
-func (p *Pact) TryLogMessage(text string, msg interface{}) {
-	if p.LoggingOn {
+func (catcher *Catcher) TryLogMessage(text string, msg interface{}) {
+	if catcher.LoggingOn {
 		fmt.Printf(`
 %s
 =====================

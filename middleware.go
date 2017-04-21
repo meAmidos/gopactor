@@ -4,9 +4,9 @@ import (
 	"github.com/AsynkronIT/protoactor-go/actor"
 )
 
-func (p *Pact) InboundMiddleware(next actor.ActorFunc) actor.ActorFunc {
+func (catcher *Catcher) InboundMiddleware(next actor.ActorFunc) actor.ActorFunc {
 	return func(ctx actor.Context) {
-		p.ProcessInboundMessage(ctx)
+		catcher.ProcessInboundMessage(ctx)
 
 		// Swap the context with it's thin wrapper which intercepts some calls.
 		if _, ok := ctx.(*Context); !ok {
@@ -16,35 +16,54 @@ func (p *Pact) InboundMiddleware(next actor.ActorFunc) actor.ActorFunc {
 	}
 }
 
-func (p *Pact) ProcessInboundMessage(ctx actor.Context) {
-	p.TryLogMessage("Received", ctx.Message())
+func (catcher *Catcher) ProcessInboundMessage(ctx actor.Context) {
+	message := ctx.Message()
+
+	catcher.TryLogMessage("Received", message)
 	envelope := &Envelope{
 		Sender:  ctx.Sender(),
 		Target:  ctx.Self(),
-		Message: ctx.Message(),
+		Message: message,
 	}
 
-	if !IsSystemMessage(ctx.Message()) {
-		p.InCh <- envelope
+	if !IsSystemMessage(message) {
+		catcher.ChUserInbound <- envelope
 	} else {
-		p.SysCh <- envelope
+		catcher.ProcessSystemMessage(envelope)
 	}
 }
 
-func (p *Pact) OutboundMiddleware(next actor.SenderFunc) actor.SenderFunc {
+func (catcher *Catcher) ProcessSystemMessage(envelope *Envelope) {
+	// First, process messages that have dedicated channels
+	switch envelope.Message.(type) {
+	case *actor.Started:
+		catcher.ChStarted <- envelope
+	case *actor.Stopped:
+		catcher.ChStopped <- envelope
+	}
+
+	// Second, send the message to the common buffer.
+	// Do this even if the message has it's own dedicated channel.
+	catcher.ChSystemInbound <- envelope
+}
+
+func (catcher *Catcher) OutboundMiddleware(next actor.SenderFunc) actor.SenderFunc {
 	return func(ctx actor.Context, target *actor.PID, env actor.MessageEnvelope) {
-		p.ProcessOutboundMessage(ctx, target, env)
+		catcher.ProcessOutboundMessage(ctx, target, env)
 		next(ctx, target, env)
 	}
 }
 
-func (p *Pact) ProcessOutboundMessage(ctx actor.Context, target *actor.PID, env actor.MessageEnvelope) {
-	p.TryLogMessage("Sent", ctx.Message())
-	if !IsSystemMessage(ctx.Message()) {
-		p.OutCh <- &Envelope{
+// TODO: Is there a difference between using ctx.Message() and env.Message?
+func (catcher *Catcher) ProcessOutboundMessage(ctx actor.Context, target *actor.PID, env actor.MessageEnvelope) {
+	message := env.Message
+
+	catcher.TryLogMessage("Sent", message)
+	if !IsSystemMessage(message) {
+		catcher.ChUserOutbound <- &Envelope{
 			Sender:  ctx.Self(),
 			Target:  target,
-			Message: env.Message,
+			Message: message,
 		}
 	}
 }

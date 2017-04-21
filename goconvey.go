@@ -4,55 +4,110 @@ import (
 	"github.com/AsynkronIT/protoactor-go/actor"
 )
 
-func (p *Pact) checkActualObject(actual interface{}) string {
-	object, ok := actual.(*actor.PID)
+//
+// Singleton interface
+//
+
+func ShouldReceive(actual interface{}, expected ...interface{}) string {
+	return DEFAULT_PACT.ShouldReceive(actual, expected...)
+}
+
+func ShouldReceiveFrom(actual interface{}, expected ...interface{}) string {
+	return DEFAULT_PACT.ShouldReceiveFrom(actual, expected...)
+}
+
+func ShouldReceiveN(actual interface{}, params ...interface{}) string {
+	return DEFAULT_PACT.ShouldReceiveN(actual, params...)
+}
+
+func ShouldStop(actual interface{}, _ ...interface{}) string {
+	return DEFAULT_PACT.ShouldStop(actual)
+}
+
+func ShouldSend(actual interface{}, expected ...interface{}) string {
+	return DEFAULT_PACT.ShouldSend(actual, expected...)
+}
+
+func ShouldSendTo(actual interface{}, expected ...interface{}) string {
+	return DEFAULT_PACT.ShouldSendTo(actual, expected...)
+}
+
+func ShouldSendSomething(actual interface{}, _ ...interface{}) string {
+	return DEFAULT_PACT.ShouldSendSomething(actual)
+}
+
+func ShouldSendN(actual interface{}, params ...interface{}) string {
+	return DEFAULT_PACT.ShouldSendSomething(actual, params)
+}
+
+func ShouldNotSendOrReceive(actual interface{}, _ ...interface{}) string {
+	return DEFAULT_PACT.ShouldSendSomething(actual)
+}
+
+//
+// Object interface
+//
+
+// Should receive a given message.
+// It does not matter who is the sender.
+func (p *Pact) ShouldReceive(param1 interface{}, params ...interface{}) string {
+	actual, ok := param1.(*actor.PID)
 	if !ok {
 		return "Object is not an actor PID"
 	}
 
-	if !p.AssignedActor.Equal(object) {
-		return "Object is not registered for tests"
+	if len(params) != 1 {
+		return "One parameter with a message is required to assert receiving"
 	}
 
-	return ""
+	expectedMsg, ok := params[0].(*actor.PID)
+	if !ok {
+		return "Object is not an actor PID"
+	}
+
+	return p.shouldReceive(actual, nil, expectedMsg)
 }
 
-func (p *Pact) ShouldReceive(actual interface{}, expected ...interface{}) string {
-	p.checkActualObject(actual)
-
-	// If a single argument is provided than it's a message
-	//    and the sender does not matter
-	if len(expected) == 1 {
-		return p.shouldReceive(expected[0], nil)
+// Should receive a given message from a given sender
+func (p *Pact) ShouldReceiveFrom(param1 interface{}, params ...interface{}) string {
+	actual, ok := param1.(*actor.PID)
+	if !ok {
+		return "Object is not an actor PID"
 	}
 
-	if len(expected) != 2 {
-		return "One or two paremeters are required to assert receiving"
+	if len(params) != 2 {
+		return "Two parameters are required to assert receiving"
 	}
+
+	expectedMsg := params[0]
 
 	// Two arguments means that the second is the expected sender
-	from, ok := expected[1].(*actor.PID)
+	sender, ok := params[1].(*actor.PID)
 	if !ok {
 		return "Sender should be an actor PID"
 	}
 
-	return p.shouldReceive(expected[0], from)
+	return p.shouldReceive(actual, sender, expectedMsg)
 }
 
-func (p *Pact) ShouldReceiveSomething(actual interface{}, params ...interface{}) string {
-	p.checkActualObject(actual)
+// Should receive N any messages
+func (p *Pact) ShouldReceiveN(param1 interface{}, params ...interface{}) string {
+	actual, ok := param1.(*actor.PID)
+	if !ok {
+		return "Object is not an actor PID"
+	}
 
-	expectedMessages := 1
-	var ok bool
-	if len(params) > 0 {
-		expectedMessages, ok = params[0].(int)
-		if !ok {
-			return "Number of repeats should be integer"
-		}
+	if len(params) != 1 {
+		return "One paramenter with the number of messages is required"
+	}
+
+	expectedMessages, ok := params[0].(int)
+	if !ok || expectedMessages <= 0 {
+		return "Number of messages should be a positive integer"
 	}
 
 	for i := 0; i < expectedMessages; i++ {
-		res := p.shouldReceive(nil, nil)
+		res := p.shouldReceive(actual, nil, nil)
 		if res != "" {
 			return res
 		}
@@ -61,42 +116,97 @@ func (p *Pact) ShouldReceiveSomething(actual interface{}, params ...interface{})
 	return ""
 }
 
-func (p *Pact) ShouldBeStopping(actual interface{}, _ ...interface{}) string {
-	p.checkActualObject(actual)
-	return p.shouldBeStopping()
-}
-
-func (p *Pact) ShouldSend(actual interface{}, expected ...interface{}) string {
-	p.checkActualObject(actual)
-
-	// If there is only one argument than it's the message to assert
-	if len(expected) == 1 {
-		return p.shouldSend(expected[0], nil)
+func (p *Pact) ShouldStop(param1 interface{}, _ ...interface{}) string {
+	actual, ok := param1.(*actor.PID)
+	if !ok {
+		return "Object is not an actor PID"
 	}
 
-	if len(expected) != 2 {
+	return p.shouldStop(actual)
+}
+
+// Should send one given message.
+// Who is the receiver does not matter.
+func (p *Pact) ShouldSend(param1 interface{}, params ...interface{}) string {
+	actual, ok := param1.(*actor.PID)
+	if !ok {
+		return "Object is not an actor PID"
+	}
+
+	// If there is only one argument than it's the message to assert
+	if len(params) != 1 {
 		return "One or two paremeters are required to assert sending"
 	}
 
+	expectedMsg := params[0]
+
+	return p.shouldSend(actual, nil, expectedMsg)
+}
+
+// Should send one given message to the specified receiver.
+func (p *Pact) ShouldSendTo(param1 interface{}, params ...interface{}) string {
+	actual, ok := param1.(*actor.PID)
+	if !ok {
+		return "Object is not an actor PID"
+	}
+
+	if len(params) != 2 {
+		return "Too paremeters are required to assert sending"
+	}
+
+	expectedMsg := params[0]
+
 	// If there are two arguments than the second is the expected target of sending
-	target, ok := expected[1].(*actor.PID)
+	receiver, ok := params[1].(*actor.PID)
 	if !ok {
 		return "Receiver should be an actor PID"
 	}
 
-	return p.shouldSend(expected[0], target)
+	return p.shouldSend(actual, receiver, expectedMsg)
 }
 
-func (p *Pact) ShouldSendSomething(actual interface{}, _ ...interface{}) string {
-	p.checkActualObject(actual)
+func (p *Pact) ShouldSendSomething(param1 interface{}, _ ...interface{}) string {
+	actual, ok := param1.(*actor.PID)
+	if !ok {
+		return "Object is not an actor PID"
+	}
 
-	return p.shouldSend(nil, nil)
+	return p.shouldSend(actual, nil, nil)
+}
+
+// Should send N any messages
+func (p *Pact) ShouldSendN(param1 interface{}, params ...interface{}) string {
+	actual, ok := param1.(*actor.PID)
+	if !ok {
+		return "Object is not an actor PID"
+	}
+
+	if len(params) != 1 {
+		return "One paramenter with the number of messages is required"
+	}
+
+	expectedMessages, ok := params[0].(int)
+	if !ok || expectedMessages <= 0 {
+		return "Number of messages should be a positive integer"
+	}
+
+	for i := 0; i < expectedMessages; i++ {
+		res := p.shouldSend(actual, nil, nil)
+		if res != "" {
+			return res
+		}
+	}
+
+	return ""
 }
 
 // TODO: Add a timeout parameter.
 //       Otherwise this will not work for long running "reactions".
-func (p *Pact) ShouldNotReact(actual interface{}, _ ...interface{}) string {
-	p.checkActualObject(actual)
+func (p *Pact) ShouldNotSendOrReceive(param1 interface{}, _ ...interface{}) string {
+	actual, ok := param1.(*actor.PID)
+	if !ok {
+		return "Object is not an actor PID"
+	}
 
-	return p.waitForAnything()
+	return p.shouldNotSendOrReceive(actual)
 }

@@ -1,157 +1,80 @@
 package pact
 
 import (
-	"fmt"
-	"reflect"
-	"time"
-
 	"github.com/AsynkronIT/protoactor-go/actor"
 )
 
-const (
-	TEST_TIMEOUT = 3 * time.Millisecond
-)
-
-type Envelope struct {
-	Sender  *actor.PID
-	Target  *actor.PID
-	Message interface{}
-}
-
 type Pact struct {
-	SysCh         chan *Envelope
-	InCh          chan *Envelope
-	OutCh         chan *Envelope
-	AssignedActor *actor.PID
+	CatchersByPID map[string]*Catcher
 	LoggingOn     bool
 }
 
 func New() *Pact {
 	return &Pact{
-		SysCh: make(chan *Envelope, 10),
-		InCh:  make(chan *Envelope), // TODO: Use a buffered channel to not block on system messages
-		OutCh: make(chan *Envelope),
+		CatchersByPID: make(map[string]*Catcher),
 	}
 }
 
-func (p *Pact) SpawnPrefix(obj actor.Actor, prefix string) (*actor.PID, error) {
-	props := actor.
-		FromInstance(obj).
-		WithMiddleware(p.InboundMiddleware).
-		WithOutboundMiddleware(p.OutboundMiddleware)
+var DEFAULT_PACT *Pact
 
-	// TODO: Spawn from a dedicated actor which could catch exceptions
-	pid, err := actor.SpawnPrefix(props, prefix)
+func init() {
+	DEFAULT_PACT = New()
+}
+
+func (p *Pact) GetCatcherByPID(pid *actor.PID) *Catcher {
+	return p.CatchersByPID[pid.String()]
+}
+
+func (p *Pact) SpawnFromInstance(obj actor.Actor, prefix string) (*actor.PID, error) {
+	catcher := NewCatcher()
+	catcher.LoggingOn = p.LoggingOn
+
+	pid, err := catcher.SpawnFromInstance(obj, prefix)
 	if err != nil {
 		return nil, err
 	}
 
-	p.AssignedActor = pid
+	p.CatchersByPID[pid.String()] = catcher
+
 	return pid, nil
 }
 
-func (p *Pact) shouldReceive(msg interface{}, from *actor.PID) string {
-	select {
-	case envelope := <-p.InCh:
-		if msg == nil {
-			return ""
-		} else {
-			return p.assertInboundMessage(envelope, msg, from)
-		}
-	case <-time.After(TEST_TIMEOUT):
-		break
+func (p *Pact) shouldReceive(receiver, sender *actor.PID, msg interface{}) string {
+	catcher := p.GetCatcherByPID(receiver)
+	if catcher == nil {
+		return "Receiver is not registered in Pact"
 	}
 
-	return "Timeout while waiting for a message"
+	return catcher.ShouldReceive(sender, msg)
 }
 
-func (p *Pact) shouldReceiveSysMsg(msg interface{}) string {
-	for {
-		select {
-		case envelope := <-p.SysCh:
-			if msg == nil { // Any message is ok
-				return ""
-			} else {
-				// Ignore unmatching messages
-				// This is important. Otherwise we would always have to check for
-				// for the Start message first. And potentially other intermediate messages.
-				match := p.assertInboundMessage(envelope, msg, nil)
-				if match == "" {
-					return ""
-				}
-			}
-		case <-time.After(TEST_TIMEOUT):
-			break
-		}
+func (p *Pact) shouldReceiveSysMsg(receiver *actor.PID, msg interface{}) string {
+	catcher := p.GetCatcherByPID(receiver)
+	if catcher == nil {
+		return "Receiver is not registered in Pact"
 	}
 
-	return "Timeout while waiting for a system message"
+	return catcher.ShouldReceiveSysMsg(msg)
 }
 
-func (p *Pact) shouldBeStopping() string {
-	return p.shouldReceiveSysMsg(&actor.Stopping{})
+func (p *Pact) shouldStop(pid *actor.PID) string {
+	return p.shouldReceiveSysMsg(pid, &actor.Stopped{})
 }
 
-func (p *Pact) assertInboundMessage(envelope *Envelope, msg interface{}, from *actor.PID) string {
-	if !reflect.DeepEqual(envelope.Message, msg) {
-		return fmt.Sprintf(`
-Messages do not match
-Expected: %#v
-Actual: %#v
-`, msg, envelope.Message)
+func (p *Pact) shouldSend(sender, receiver *actor.PID, msg interface{}) string {
+	catcher := p.GetCatcherByPID(receiver)
+	if catcher == nil {
+		return "Sender is not registered in Pact"
 	}
 
-	if from != nil && !from.Equal(envelope.Sender) {
-		return fmt.Sprintf(`
-Sender does not match
-Expected: %#v
-Actual: %#v
-`, from, envelope.Sender)
-	}
-
-	return ""
+	return catcher.ShouldSend(receiver, msg)
 }
 
-func (p *Pact) shouldSend(msg interface{}, target *actor.PID) string {
-	select {
-	case envelope := <-p.OutCh:
-		if msg == nil {
-			return ""
-		} else {
-			return p.assertOutboundMessage(envelope, msg, target)
-		}
-	case <-time.After(TEST_TIMEOUT):
-		break
+func (p *Pact) shouldNotSendOrReceive(pid *actor.PID) string {
+	catcher := p.GetCatcherByPID(pid)
+	if catcher == nil {
+		return "Sender is not registered in Pact"
 	}
 
-	return "Timeout while waiting for sending"
-}
-
-func (p *Pact) assertOutboundMessage(envelope *Envelope, msg interface{}, target *actor.PID) string {
-	if !reflect.DeepEqual(envelope.Message, msg) {
-		return fmt.Sprintf(`
-Messages do not match
-Expected: %#v
-Actual: %#v
-`, msg, envelope.Message)
-	}
-
-	if target != nil && !target.Equal(envelope.Target) {
-		return "Receiver does not match"
-	}
-
-	return ""
-}
-
-func (p *Pact) waitForAnything() string {
-	select {
-	case envelope := <-p.OutCh:
-		return fmt.Sprintf("Got outbound message: %#v", envelope.Message)
-	case envelope := <-p.InCh:
-		return fmt.Sprintf("Got inbound message: %#v", envelope.Message)
-	case <-time.After(TEST_TIMEOUT):
-		break
-	}
-
-	return ""
+	return catcher.ShouldNotSendOrReceive(pid)
 }
