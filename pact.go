@@ -39,6 +39,20 @@ func (p *Pact) SpawnFromInstance(obj actor.Actor, prefix string) (*actor.PID, er
 	return pid, nil
 }
 
+func (p *Pact) SpawnFromFunc(f actor.ActorFunc, prefix string) (*actor.PID, error) {
+	catcher := NewCatcher()
+	catcher.LoggingOn = p.LoggingOn
+
+	pid, err := catcher.SpawnFromFunc(f, prefix)
+	if err != nil {
+		return nil, err
+	}
+
+	p.CatchersByPID[pid.String()] = catcher
+
+	return pid, nil
+}
+
 func (p *Pact) shouldReceive(receiver, sender *actor.PID, msg interface{}) string {
 	catcher := p.GetCatcherByPID(receiver)
 	if catcher == nil {

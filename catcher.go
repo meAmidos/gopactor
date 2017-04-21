@@ -44,9 +44,8 @@ func NewCatcher() *Catcher {
 	}
 }
 
-func (catcher *Catcher) SpawnFromInstance(obj actor.Actor, prefix string) (*actor.PID, error) {
-	props := actor.
-		FromInstance(obj).
+func (catcher *Catcher) spawn(props *actor.Props, prefix string) (*actor.PID, error) {
+	props = props.
 		WithMiddleware(catcher.InboundMiddleware).
 		WithOutboundMiddleware(catcher.OutboundMiddleware)
 
@@ -57,6 +56,16 @@ func (catcher *Catcher) SpawnFromInstance(obj actor.Actor, prefix string) (*acto
 
 	catcher.AssignedActor = pid
 	return pid, nil
+}
+
+func (catcher *Catcher) SpawnFromInstance(obj actor.Actor, prefix string) (*actor.PID, error) {
+	props := actor.FromInstance(obj)
+	return catcher.spawn(props, prefix)
+}
+
+func (catcher *Catcher) SpawnFromFunc(f actor.ActorFunc, prefix string) (*actor.PID, error) {
+	props := actor.FromFunc(f)
+	return catcher.spawn(props, prefix)
 }
 
 func (catcher *Catcher) ShouldReceive(sender *actor.PID, msg interface{}) string {
