@@ -1,6 +1,8 @@
 package pact
 
-import "github.com/AsynkronIT/protoactor-go/actor"
+import (
+	"github.com/AsynkronIT/protoactor-go/actor"
+)
 
 func (p *Pact) InboundMiddleware(next actor.ActorFunc) actor.ActorFunc {
 	return func(ctx actor.Context) {
@@ -16,12 +18,16 @@ func (p *Pact) InboundMiddleware(next actor.ActorFunc) actor.ActorFunc {
 
 func (p *Pact) ProcessInboundMessage(ctx actor.Context) {
 	p.TryLogMessage("Received", ctx.Message())
+	envelope := &Envelope{
+		Sender:  ctx.Sender(),
+		Target:  ctx.Self(),
+		Message: ctx.Message(),
+	}
+
 	if !IsSystemMessage(ctx.Message()) {
-		p.InCh <- &Envelope{
-			Sender:  ctx.Sender(),
-			Target:  ctx.Self(),
-			Message: ctx.Message(),
-		}
+		p.InCh <- envelope
+	} else {
+		p.SysCh <- envelope
 	}
 }
 
