@@ -1,6 +1,8 @@
 package pact
 
-import "github.com/AsynkronIT/protoactor-go/actor"
+import (
+	"github.com/AsynkronIT/protoactor-go/actor"
+)
 
 func (p *Pact) checkActualObject(actual interface{}) string {
 	object, ok := actual.(*actor.PID)
@@ -57,6 +59,11 @@ func (p *Pact) ShouldReceiveSomething(actual interface{}, params ...interface{})
 	}
 
 	return ""
+}
+
+func (p *Pact) ShouldBeStopping(actual interface{}, _ ...interface{}) string {
+	p.checkActualObject(actual)
+	return p.shouldBeStopping()
 }
 
 func (p *Pact) ShouldSend(actual interface{}, expected ...interface{}) string {

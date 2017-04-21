@@ -88,6 +88,10 @@ func (p *Pact) shouldReceiveSysMsg(msg interface{}) string {
 	return "Timeout while waiting for a system message"
 }
 
+func (p *Pact) shouldBeStopping() string {
+	return p.shouldReceiveSysMsg(&actor.Stopping{})
+}
+
 func (p *Pact) assertInboundMessage(envelope *Envelope, msg interface{}, from *actor.PID) string {
 	if !reflect.DeepEqual(envelope.Message, msg) {
 		return fmt.Sprintf(`
