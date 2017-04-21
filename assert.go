@@ -16,12 +16,20 @@ Actual: %#v
 `, msg, envelope.Message)
 	}
 
-	if sender != nil && !sender.Equal(envelope.Sender) {
-		return fmt.Sprintf(`
+	if sender != nil {
+		if envelope.Sender == nil {
+			return fmt.Sprintf(`
+Sender is unknown
+Expected: %#v
+Actual: nil
+`, sender)
+		} else if !sender.Equal(envelope.Sender) {
+			return fmt.Sprintf(`
 Sender does not match
 Expected: %#v
 Actual: %#v
 `, sender, envelope.Sender)
+		}
 	}
 
 	return ""
