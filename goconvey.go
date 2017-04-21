@@ -37,10 +37,26 @@ func (p *Pact) ShouldReceive(actual interface{}, expected ...interface{}) string
 	return p.shouldReceive(expected[0], from)
 }
 
-func (p *Pact) ShouldReceiveSomething(actual interface{}, _ ...interface{}) string {
+func (p *Pact) ShouldReceiveSomething(actual interface{}, params ...interface{}) string {
 	p.checkActualObject(actual)
 
-	return p.shouldReceive(nil, nil)
+	expectedMessages := 1
+	var ok bool
+	if len(params) > 0 {
+		expectedMessages, ok = params[0].(int)
+		if !ok {
+			return "Number of repeats should be integer"
+		}
+	}
+
+	for i := 0; i < expectedMessages; i++ {
+		res := p.shouldReceive(nil, nil)
+		if res != "" {
+			return res
+		}
+	}
+
+	return ""
 }
 
 func (p *Pact) ShouldSend(actual interface{}, expected ...interface{}) string {
