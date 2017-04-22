@@ -1,6 +1,8 @@
 package pact
 
 import (
+	"fmt"
+
 	"github.com/AsynkronIT/protoactor-go/actor"
 )
 
@@ -106,7 +108,7 @@ func (p *Pact) ShouldReceiveN(param1 interface{}, params ...interface{}) string 
 	for i := 0; i < expectedMessages; i++ {
 		res := p.shouldReceive(receiver, nil, nil)
 		if res != "" {
-			return res
+			return fmt.Sprintf("Expected %d messages, but got %d", expectedMessages, i)
 		}
 	}
 
@@ -132,7 +134,7 @@ func (p *Pact) ShouldSend(param1 interface{}, params ...interface{}) string {
 
 	// If there is only one argument than it's the message to assert
 	if len(params) != 1 {
-		return "One parameter is required to assert sending"
+		return "One parameter with a message is required to assert sending"
 	}
 
 	expectedMsg := params[0]

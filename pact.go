@@ -46,7 +46,7 @@ func (p *Pact) shouldStop(pid *actor.PID) string {
 }
 
 func (p *Pact) shouldSend(sender, receiver *actor.PID, msg interface{}) string {
-	catcher := p.GetCatcherByPID(receiver)
+	catcher := p.GetCatcherByPID(sender)
 	if catcher == nil {
 		return "Sender is not registered in Pact"
 	}
