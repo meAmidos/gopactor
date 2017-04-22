@@ -78,13 +78,13 @@ func (p *Pact) ShouldReceiveFrom(param1 interface{}, params ...interface{}) stri
 		return "Two parameters are required to assert receiving"
 	}
 
-	expectedMsg := params[0]
-
 	// Two arguments means that the second is the expected sender
-	sender, ok := params[1].(*actor.PID)
+	sender, ok := params[0].(*actor.PID)
 	if !ok {
 		return "Sender should be an actor PID"
 	}
+
+	expectedMsg := params[1]
 
 	return p.shouldReceive(receiver, sender, expectedMsg)
 }
@@ -150,16 +150,16 @@ func (p *Pact) ShouldSendTo(param1 interface{}, params ...interface{}) string {
 	}
 
 	if len(params) != 2 {
-		return "Too parameters are required to assert sending"
+		return "Two parameters are required to assert sending"
 	}
 
-	expectedMsg := params[0]
-
 	// If there are two arguments than the second is the expected target of sending
-	receiver, ok := params[1].(*actor.PID)
+	receiver, ok := params[0].(*actor.PID)
 	if !ok {
 		return "Receiver should be an actor PID"
 	}
+
+	expectedMsg := params[1]
 
 	return p.shouldSend(sender, receiver, expectedMsg)
 }
