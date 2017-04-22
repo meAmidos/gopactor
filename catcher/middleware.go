@@ -36,16 +36,6 @@ func (catcher *Catcher) ProcessInboundMessage(ctx actor.Context) {
 }
 
 func (catcher *Catcher) ProcessSystemMessage(envelope *Envelope) {
-	// First, process messages that have dedicated channels
-	switch envelope.Message.(type) {
-	case *actor.Started:
-		catcher.ChStarted <- envelope
-	case *actor.Stopped:
-		catcher.ChStopped <- envelope
-	}
-
-	// Second, send the message to the common buffer.
-	// Do this even if the message has it's own dedicated channel.
 	catcher.ChSystemInbound <- envelope
 }
 

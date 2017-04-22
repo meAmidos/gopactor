@@ -22,10 +22,6 @@ type Catcher struct {
 	ChUserInbound   chan *Envelope
 	ChUserOutbound  chan *Envelope
 
-	// Channels dedicated to specific messages
-	ChStopped chan *Envelope
-	ChStarted chan *Envelope
-
 	// One followed actor per catcher
 	AssignedActor *actor.PID
 
@@ -43,8 +39,6 @@ func (catcher *Catcher) id() string {
 func New() *Catcher {
 	return &Catcher{
 		ChSystemInbound: make(chan *Envelope, 10),
-		ChStopped:       make(chan *Envelope, 1),
-		ChStarted:       make(chan *Envelope, 1),
 
 		// These are deliberately not buffered to make synchronization points
 		ChUserInbound:  make(chan *Envelope),
