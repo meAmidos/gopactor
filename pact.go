@@ -10,15 +10,13 @@ type Pact struct {
 }
 
 func New() *Pact {
-	return &Pact{
-		CatchersByPID: make(map[string]*Catcher),
-	}
+	p := &Pact{}
+	p.Reset()
+	return p
 }
 
-var DEFAULT_PACT *Pact
-
-func init() {
-	DEFAULT_PACT = New()
+func (p *Pact) Reset() {
+	p.CatchersByPID = make(map[string]*Catcher)
 }
 
 func (p *Pact) GetCatcherByPID(pid *actor.PID) *Catcher {
