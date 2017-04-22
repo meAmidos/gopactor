@@ -18,6 +18,10 @@ func ShouldReceiveFrom(actual interface{}, expected ...interface{}) string {
 	return DEFAULT_PACT.ShouldReceiveFrom(actual, expected...)
 }
 
+func ShouldReceiveSomething(actual interface{}, expected ...interface{}) string {
+	return DEFAULT_PACT.ShouldReceiveSomething(actual, expected...)
+}
+
 func ShouldReceiveN(actual interface{}, params ...interface{}) string {
 	return DEFAULT_PACT.ShouldReceiveN(actual, params...)
 }
@@ -87,6 +91,16 @@ func (p *Pact) ShouldReceiveFrom(param1 interface{}, params ...interface{}) stri
 	expectedMsg := params[1]
 
 	return p.shouldReceive(receiver, sender, expectedMsg)
+}
+
+// Should receive at least something
+func (p *Pact) ShouldReceiveSomething(param1 interface{}, _ ...interface{}) string {
+	receiver, ok := param1.(*actor.PID)
+	if !ok {
+		return "Receiver is not an actor PID"
+	}
+
+	return p.shouldReceive(receiver, nil, nil)
 }
 
 // Should receive N any messages
