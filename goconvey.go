@@ -43,11 +43,11 @@ func ShouldSendSomething(actual interface{}, _ ...interface{}) string {
 }
 
 func ShouldSendN(actual interface{}, params ...interface{}) string {
-	return DEFAULT_PACT.ShouldSendSomething(actual, params)
+	return DEFAULT_PACT.ShouldSendN(actual, params...)
 }
 
 func ShouldNotSendOrReceive(actual interface{}, _ ...interface{}) string {
-	return DEFAULT_PACT.ShouldSendSomething(actual)
+	return DEFAULT_PACT.ShouldNotSendOrReceive(actual)
 }
 
 //
