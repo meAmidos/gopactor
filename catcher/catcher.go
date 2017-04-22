@@ -54,9 +54,10 @@ func (catcher *Catcher) Spawn(props *actor.Props, prefix string, options ...Opti
 	} else {
 		opt = options[0]
 	}
+
 	catcher.options = opt
 
-	if opt.EnableInboundInterception {
+	if opt.EnableInboundInterception || opt.EnableSystemInterception {
 		props = props.WithMiddleware(catcher.InboundMiddleware)
 	}
 

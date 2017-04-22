@@ -27,11 +27,13 @@ func (catcher *Catcher) ProcessInboundMessage(ctx actor.Context) {
 	}
 
 	if !IsSystemMessage(message) {
-		// fmt.Printf("\n== INBOUND (%s): %#v\n", catcher.id(), message)
-		catcher.ChUserInbound <- envelope
+		if catcher.options.EnableInboundInterception {
+			catcher.ChUserInbound <- envelope
+		}
 	} else {
-		// fmt.Printf("\n== IN SYS (%s): %#v\n", catcher.id(), message)
-		catcher.ProcessSystemMessage(envelope)
+		if catcher.options.EnableSystemInterception {
+			catcher.ProcessSystemMessage(envelope)
+		}
 	}
 }
 
