@@ -24,6 +24,11 @@ func (p *Pact) SpawnFromInstance(obj actor.Actor, prefix string, options ...catc
 	return p.spawn(props, prefix, options...)
 }
 
+func (p *Pact) SpawnFromProducer(producer actor.Producer, prefix string, options ...catcher.Options) (*actor.PID, error) {
+	props := actor.FromProducer(producer)
+	return p.spawn(props, prefix, options...)
+}
+
 func (p *Pact) SpawnFromFunc(f actor.ActorFunc, prefix string, options ...catcher.Options) (*actor.PID, error) {
 	props := actor.FromFunc(f)
 	return p.spawn(props, prefix, options...)

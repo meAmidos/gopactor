@@ -10,6 +10,10 @@ func SpawnFromInstance(obj actor.Actor, prefix string, options ...catcher.Option
 	return pact.DEFAULT_PACT.SpawnFromInstance(obj, prefix, options...)
 }
 
+func SpawnFromProducer(producer actor.Producer, prefix string, options ...catcher.Options) (*actor.PID, error) {
+	return pact.DEFAULT_PACT.SpawnFromProducer(producer, prefix, options...)
+}
+
 func SpawnFromFunc(f actor.ActorFunc, prefix string, options ...catcher.Options) (*actor.PID, error) {
 	return pact.DEFAULT_PACT.SpawnFromFunc(f, prefix, options...)
 }
