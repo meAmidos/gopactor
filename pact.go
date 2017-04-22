@@ -2,63 +2,22 @@ package pact
 
 import (
 	"github.com/AsynkronIT/protoactor-go/actor"
+	"github.com/meamidos/pact/catcher"
+	"github.com/meamidos/pact/pact"
 )
 
-type Pact struct {
-	CatchersByPID map[string]*Catcher
-	LoggingOn     bool
+func SpawnFromInstance(obj actor.Actor, prefix string, options ...catcher.Options) (*actor.PID, error) {
+	return pact.DEFAULT_PACT.SpawnFromInstance(obj, prefix, options...)
 }
 
-func New() *Pact {
-	p := &Pact{}
-	p.Reset()
-	return p
+func SpawnFromFunc(f actor.ActorFunc, prefix string, options ...catcher.Options) (*actor.PID, error) {
+	return pact.DEFAULT_PACT.SpawnFromFunc(f, prefix, options...)
 }
 
-func (p *Pact) Reset() {
-	p.CatchersByPID = make(map[string]*Catcher)
+func SpawnMockWithPrefix(prefix string, options ...catcher.Options) (*actor.PID, error) {
+	return pact.DEFAULT_PACT.SpawnMockWithPrefix(prefix, options...)
 }
 
-func (p *Pact) GetCatcherByPID(pid *actor.PID) *Catcher {
-	return p.CatchersByPID[pid.String()]
-}
-
-func (p *Pact) shouldReceive(receiver, sender *actor.PID, msg interface{}) string {
-	catcher := p.GetCatcherByPID(receiver)
-	if catcher == nil {
-		return "Receiver is not registered in Pact"
-	}
-
-	return catcher.ShouldReceive(sender, msg)
-}
-
-func (p *Pact) shouldReceiveSysMsg(receiver *actor.PID, msg interface{}) string {
-	catcher := p.GetCatcherByPID(receiver)
-	if catcher == nil {
-		return "Receiver is not registered in Pact"
-	}
-
-	return catcher.ShouldReceiveSysMsg(msg)
-}
-
-func (p *Pact) shouldStop(pid *actor.PID) string {
-	return p.shouldReceiveSysMsg(pid, &actor.Stopped{})
-}
-
-func (p *Pact) shouldSend(sender, receiver *actor.PID, msg interface{}) string {
-	catcher := p.GetCatcherByPID(sender)
-	if catcher == nil {
-		return "Sender is not registered in Pact"
-	}
-
-	return catcher.ShouldSend(receiver, msg)
-}
-
-func (p *Pact) shouldNotSendOrReceive(pid *actor.PID) string {
-	catcher := p.GetCatcherByPID(pid)
-	if catcher == nil {
-		return "Sender is not registered in Pact"
-	}
-
-	return catcher.ShouldNotSendOrReceive(pid)
+func PactReset() {
+	pact.DEFAULT_PACT.Reset()
 }

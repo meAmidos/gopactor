@@ -1,10 +1,10 @@
-package pact_test
+package pact
 
 import (
 	"testing"
 
 	"github.com/AsynkronIT/protoactor-go/actor"
-	. "github.com/meAmidos/pact"
+	"github.com/meamidos/pact/catcher"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -149,7 +149,7 @@ func TestShouldSend(t *testing.T) {
 				ctx.Request(receiver, "request from sender")
 			}
 		}
-	}, "snd", OptOutboundInterceptionOnly)
+	}, "snd", catcher.OptOutboundInterceptionOnly)
 
 	// Wrong params
 	a.Contains(ShouldSend(nil), "not an actor PID")
@@ -195,7 +195,7 @@ func TestShouldSendTo(t *testing.T) {
 				ctx.Request(receiver, "request from sender")
 			}
 		}
-	}, "snd", OptOutboundInterceptionOnly)
+	}, "snd", catcher.OptOutboundInterceptionOnly)
 
 	// Wrong params
 	a.Contains(ShouldSendTo(nil), "not an actor PID")
@@ -247,7 +247,7 @@ func TestShouldSendSomething(t *testing.T) {
 				ctx.Request(receiver, "request from sender")
 			}
 		}
-	}, "snd", OptOutboundInterceptionOnly)
+	}, "snd", catcher.OptOutboundInterceptionOnly)
 
 	// Wrong params
 	a.Contains(ShouldSendSomething(nil), "not an actor PID")
@@ -280,7 +280,7 @@ func TestShouldSendN(t *testing.T) {
 				ctx.Request(receiver, "request from sender")
 			}
 		}
-	}, "snd", OptOutboundInterceptionOnly)
+	}, "snd", catcher.OptOutboundInterceptionOnly)
 
 	// Wrong params
 	a.Contains(ShouldSendN(nil), "not an actor PID")
@@ -327,7 +327,7 @@ func TestShouldNotSendOrReceive(t *testing.T) {
 				ctx.Request(receiver, "request from sender")
 			}
 		}
-	}, "snd", OptOutboundInterceptionOnly)
+	}, "snd", catcher.OptOutboundInterceptionOnly)
 
 	// Wrong params
 	a.Contains(ShouldNotSendOrReceive(nil), "not an actor PID")

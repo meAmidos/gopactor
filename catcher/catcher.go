@@ -1,4 +1,4 @@
-package pact
+package catcher
 
 import (
 	"fmt"
@@ -32,7 +32,15 @@ type Catcher struct {
 	LoggingOn bool
 }
 
-func NewCatcher() *Catcher {
+func (catcher *Catcher) id() string {
+	if catcher.AssignedActor != nil {
+		return catcher.AssignedActor.String()
+	}
+
+	return "-"
+}
+
+func New() *Catcher {
 	return &Catcher{
 		ChSystemInbound: make(chan *Envelope, 10),
 		ChStopped:       make(chan *Envelope, 1),

@@ -1,21 +1,10 @@
 package pact
 
-type Options struct {
-	EnableInboundInterception  bool
-	EnableOutboundInterception bool
-}
+import "github.com/meamidos/pact/catcher"
 
-var OptNoInterception = Options{}
-
-var OptDefault = Options{
-	EnableInboundInterception:  true,
-	EnableOutboundInterception: true,
-}
-
-var OptOutboundInterceptionOnly = Options{
-	EnableOutboundInterception: true,
-}
-
-var OptInboundInterceptionOnly = Options{
-	EnableInboundInterception: true,
-}
+var (
+	OptNoInterception           = catcher.OptNoInterception
+	OptDefault                  = catcher.OptDefault
+	OptOutboundInterceptionOnly = catcher.OptOutboundInterceptionOnly
+	OptInboundInterceptionOnly  = catcher.OptInboundInterceptionOnly
+)

@@ -1,4 +1,4 @@
-package pact
+package catcher
 
 import (
 	"github.com/AsynkronIT/protoactor-go/actor"
@@ -27,8 +27,10 @@ func (catcher *Catcher) ProcessInboundMessage(ctx actor.Context) {
 	}
 
 	if !IsSystemMessage(message) {
+		// fmt.Printf("\n== INBOUND (%s): %#v\n", catcher.id(), message)
 		catcher.ChUserInbound <- envelope
 	} else {
+		// fmt.Printf("\n== IN SYS (%s): %#v\n", catcher.id(), message)
 		catcher.ProcessSystemMessage(envelope)
 	}
 }
