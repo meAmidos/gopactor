@@ -78,10 +78,8 @@ func (catcher *Catcher) ShouldReceive(sender *actor.PID, msg interface{}) string
 			return assertInboundMessage(envelope, msg, sender)
 		}
 	case <-time.After(TEST_TIMEOUT):
-		break
+		return "Timeout while waiting for a message"
 	}
-
-	return "Timeout while waiting for a message"
 }
 
 func (catcher *Catcher) ShouldReceiveSysMsg(msg interface{}) string {
@@ -114,10 +112,8 @@ func (catcher *Catcher) ShouldSend(receiver *actor.PID, msg interface{}) string 
 			return assertOutboundMessage(envelope, msg, receiver)
 		}
 	case <-time.After(TEST_TIMEOUT):
-		break
+		return "Timeout while waiting for sending"
 	}
-
-	return "Timeout while waiting for sending"
 }
 
 func (catcher *Catcher) ShouldNotSendOrReceive(pid *actor.PID) string {
@@ -127,8 +123,6 @@ func (catcher *Catcher) ShouldNotSendOrReceive(pid *actor.PID) string {
 	case envelope := <-catcher.ChUserInbound:
 		return fmt.Sprintf("Got inbound message: %#v", envelope.Message)
 	case <-time.After(TEST_TIMEOUT):
-		break
+		return ""
 	}
-
-	return ""
 }
