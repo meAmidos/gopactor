@@ -44,10 +44,21 @@ func NewCatcher() *Catcher {
 	}
 }
 
-func (catcher *Catcher) Spawn(props *actor.Props, prefix string) (*actor.PID, error) {
-	props = props.
-		WithMiddleware(catcher.InboundMiddleware).
-		WithOutboundMiddleware(catcher.OutboundMiddleware)
+func (catcher *Catcher) Spawn(props *actor.Props, prefix string, options ...Options) (*actor.PID, error) {
+	var opt Options
+	if len(options) == 0 {
+		opt = OptDefault
+	} else {
+		opt = options[0]
+	}
+
+	if opt.EnableInboundInterception {
+		props = props.WithMiddleware(catcher.InboundMiddleware)
+	}
+
+	if opt.EnableOutboundInterception {
+		props = props.WithOutboundMiddleware(catcher.OutboundMiddleware)
+	}
 
 	pid, err := actor.SpawnPrefix(props, prefix)
 	if err != nil {
