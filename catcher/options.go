@@ -21,3 +21,18 @@ var OptOutboundInterceptionOnly = Options{
 var OptInboundInterceptionOnly = Options{
 	EnableInboundInterception: true,
 }
+
+func (opt Options) WithInboundInterception() Options {
+	opt.EnableInboundInterception = true
+	return opt
+}
+
+func (opt Options) WithOutboundInterception() Options {
+	opt.EnableOutboundInterception = true
+	return opt
+}
+
+func (opt Options) WithSystemInterception() Options {
+	opt.EnableSystemInterception = true
+	return opt
+}

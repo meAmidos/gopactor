@@ -354,7 +354,7 @@ func TestShouldNotSendOrReceive(t *testing.T) {
 func TestShouldStop(t *testing.T) {
 	a := assert.New(t)
 
-	receiver, _ := SpawnFromFunc(func(ctx actor.Context) {}, "rcv")
+	receiver, _ := SpawnFromFunc(func(ctx actor.Context) {}, "rcv", OptNoInterception.WithSystemInterception())
 
 	// Wrong params
 	a.Contains(ShouldStop(nil), "not an actor PID")
