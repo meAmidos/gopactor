@@ -351,6 +351,21 @@ func TestShouldNotSendOrReceive(t *testing.T) {
 	PactReset()
 }
 
+func TestShouldStart(t *testing.T) {
+	a := assert.New(t)
+
+	receiver, _ := SpawnFromFunc(func(ctx actor.Context) {}, "rcv", OptNoInterception.WithSystemInterception())
+
+	// Wrong params
+	a.Contains(ShouldStart(nil), "not an actor PID")
+
+	// Success
+	a.Empty(ShouldStart(receiver))
+
+	// Cleanup
+	PactReset()
+}
+
 func TestShouldStop(t *testing.T) {
 	a := assert.New(t)
 
@@ -365,6 +380,33 @@ func TestShouldStop(t *testing.T) {
 	// Success
 	receiver.Stop()
 	a.Empty(ShouldStop(receiver))
+
+	// Cleanup
+	PactReset()
+}
+
+func TestShouldBeRestarting(t *testing.T) {
+	a := assert.New(t)
+
+	receiver, _ := SpawnFromFunc(func(ctx actor.Context) {
+		switch m := ctx.Message().(type) {
+		case string:
+			if m == "panic" {
+				panic("I am panicing!")
+			}
+		}
+	}, "rcv", OptNoInterception.WithSystemInterception())
+
+	// Wrong params
+	a.Contains(ShouldBeRestarting(nil), "not an actor PID")
+
+	// Failure: Timeout
+	a.Contains(ShouldBeRestarting(receiver), "Timeout")
+
+	// Success
+	receiver.Tell("panic")
+	a.Empty(ShouldBeRestarting(receiver))
+	a.Empty(ShouldStart(receiver))
 
 	// Cleanup
 	PactReset()

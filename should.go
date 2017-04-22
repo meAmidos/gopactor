@@ -15,5 +15,7 @@ var (
 
 	ShouldNotSendOrReceive = assertions.ShouldNotSendOrReceive
 
-	ShouldStop = assertions.ShouldStop
+	ShouldStart        = assertions.ShouldStart
+	ShouldStop         = assertions.ShouldStop
+	ShouldBeRestarting = assertions.ShouldBeRestarting
 )

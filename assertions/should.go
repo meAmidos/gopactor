@@ -18,10 +18,6 @@ func ShouldReceiveN(actual interface{}, params ...interface{}) string {
 	return pact.DEFAULT_PACT.ShouldReceiveN(actual, params...)
 }
 
-func ShouldStop(actual interface{}, _ ...interface{}) string {
-	return pact.DEFAULT_PACT.ShouldStop(actual)
-}
-
 func ShouldSend(actual interface{}, expected ...interface{}) string {
 	return pact.DEFAULT_PACT.ShouldSend(actual, expected...)
 }
@@ -40,4 +36,16 @@ func ShouldSendN(actual interface{}, params ...interface{}) string {
 
 func ShouldNotSendOrReceive(actual interface{}, _ ...interface{}) string {
 	return pact.DEFAULT_PACT.ShouldNotSendOrReceive(actual)
+}
+
+func ShouldStart(actual interface{}, _ ...interface{}) string {
+	return pact.DEFAULT_PACT.ShouldStart(actual)
+}
+
+func ShouldStop(actual interface{}, _ ...interface{}) string {
+	return pact.DEFAULT_PACT.ShouldStop(actual)
+}
+
+func ShouldBeRestarting(actual interface{}, _ ...interface{}) string {
+	return pact.DEFAULT_PACT.ShouldBeRestarting(actual)
 }

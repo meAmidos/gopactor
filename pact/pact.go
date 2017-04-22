@@ -42,8 +42,16 @@ func (p *Pact) shouldReceiveSysMsg(receiver *actor.PID, msg interface{}) string 
 	return catcher.ShouldReceiveSysMsg(msg)
 }
 
+func (p *Pact) shouldStart(pid *actor.PID) string {
+	return p.shouldReceiveSysMsg(pid, &actor.Started{})
+}
+
 func (p *Pact) shouldStop(pid *actor.PID) string {
 	return p.shouldReceiveSysMsg(pid, &actor.Stopped{})
+}
+
+func (p *Pact) shouldBeRestarting(pid *actor.PID) string {
+	return p.shouldReceiveSysMsg(pid, &actor.Restarting{})
 }
 
 func (p *Pact) shouldSend(sender, receiver *actor.PID, msg interface{}) string {

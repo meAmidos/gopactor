@@ -81,6 +81,15 @@ func (p *Pact) ShouldReceiveN(param1 interface{}, params ...interface{}) string 
 	return ""
 }
 
+func (p *Pact) ShouldStart(param1 interface{}, _ ...interface{}) string {
+	pid, ok := param1.(*actor.PID)
+	if !ok {
+		return "Object is not an actor PID"
+	}
+
+	return p.shouldStart(pid)
+}
+
 func (p *Pact) ShouldStop(param1 interface{}, _ ...interface{}) string {
 	pid, ok := param1.(*actor.PID)
 	if !ok {
@@ -88,6 +97,15 @@ func (p *Pact) ShouldStop(param1 interface{}, _ ...interface{}) string {
 	}
 
 	return p.shouldStop(pid)
+}
+
+func (p *Pact) ShouldBeRestarting(param1 interface{}, _ ...interface{}) string {
+	pid, ok := param1.(*actor.PID)
+	if !ok {
+		return "Object is not an actor PID"
+	}
+
+	return p.shouldBeRestarting(pid)
 }
 
 // Should send one given message.
