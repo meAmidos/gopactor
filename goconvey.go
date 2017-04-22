@@ -206,7 +206,7 @@ func (p *Pact) ShouldSendN(param1 interface{}, params ...interface{}) string {
 	for i := 0; i < expectedMessages; i++ {
 		res := p.shouldSend(sender, nil, nil)
 		if res != "" {
-			return res
+			return fmt.Sprintf("Expected %d messages to be sent, but got %d", expectedMessages, i)
 		}
 	}
 
