@@ -6,20 +6,20 @@ import (
 	"github.com/meamidos/pact/pact"
 )
 
-func SpawnFromInstance(obj actor.Actor, prefix string, options ...catcher.Options) (*actor.PID, error) {
-	return pact.DEFAULT_PACT.SpawnFromInstance(obj, prefix, options...)
+func SpawnFromInstance(obj actor.Actor, options ...catcher.Options) (*actor.PID, error) {
+	return pact.DEFAULT_PACT.SpawnFromInstance(obj, options...)
 }
 
-func SpawnFromProducer(producer actor.Producer, prefix string, options ...catcher.Options) (*actor.PID, error) {
-	return pact.DEFAULT_PACT.SpawnFromProducer(producer, prefix, options...)
+func SpawnFromProducer(producer actor.Producer, options ...catcher.Options) (*actor.PID, error) {
+	return pact.DEFAULT_PACT.SpawnFromProducer(producer, options...)
 }
 
-func SpawnFromFunc(f actor.ActorFunc, prefix string, options ...catcher.Options) (*actor.PID, error) {
-	return pact.DEFAULT_PACT.SpawnFromFunc(f, prefix, options...)
+func SpawnFromFunc(f actor.ActorFunc, options ...catcher.Options) (*actor.PID, error) {
+	return pact.DEFAULT_PACT.SpawnFromFunc(f, options...)
 }
 
-func SpawnMockWithPrefix(prefix string, options ...catcher.Options) (*actor.PID, error) {
-	return pact.DEFAULT_PACT.SpawnMockWithPrefix(prefix, options...)
+func SpawnMock(options ...catcher.Options) (*actor.PID, error) {
+	return pact.DEFAULT_PACT.SpawnMock(options...)
 }
 
 func PactReset() {

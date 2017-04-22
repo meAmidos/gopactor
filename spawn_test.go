@@ -15,8 +15,20 @@ func TestSpawnFromInstance(t *testing.T) {
 	a := assert.New(t)
 
 	ta := &TestActor{}
-	_, err := SpawnFromInstance(ta, "rcv")
+	_, err := SpawnFromInstance(ta)
 	a.Nil(err)
+
+	// Cleanup
+	PactReset()
+}
+
+func TestSpawnFromInstance_WithPrefix(t *testing.T) {
+	a := assert.New(t)
+
+	ta := &TestActor{}
+	object, err := SpawnFromInstance(ta, OptDefault.WithPrefix("test-actor"))
+	a.Nil(err)
+	a.Contains(object.String(), "test-actor")
 
 	// Cleanup
 	PactReset()
@@ -29,7 +41,7 @@ func TestSpawnFromProducer(t *testing.T) {
 		return &TestActor{}
 	}
 
-	_, err := SpawnFromProducer(f, "rcv")
+	_, err := SpawnFromProducer(f)
 	a.Nil(err)
 
 	// Cleanup
@@ -39,7 +51,17 @@ func TestSpawnFromProducer(t *testing.T) {
 func TestSpawnFromFunc(t *testing.T) {
 	a := assert.New(t)
 
-	_, err := SpawnFromFunc(func(ctx actor.Context) {}, "rcv")
+	_, err := SpawnFromFunc(func(ctx actor.Context) {})
+	a.Nil(err)
+
+	// Cleanup
+	PactReset()
+}
+
+func TestSpawnMock(t *testing.T) {
+	a := assert.New(t)
+
+	_, err := SpawnMock()
 	a.Nil(err)
 
 	// Cleanup

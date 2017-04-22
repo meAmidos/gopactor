@@ -4,6 +4,7 @@ type Options struct {
 	EnableInboundInterception  bool
 	EnableOutboundInterception bool
 	EnableSystemInterception   bool
+	Prefix                     string
 }
 
 var OptNoInterception = Options{}
@@ -34,5 +35,10 @@ func (opt Options) WithOutboundInterception() Options {
 
 func (opt Options) WithSystemInterception() Options {
 	opt.EnableSystemInterception = true
+	return opt
+}
+
+func (opt Options) WithPrefix(prefix string) Options {
+	opt.Prefix = prefix
 	return opt
 }

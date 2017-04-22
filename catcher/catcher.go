@@ -47,7 +47,7 @@ func New() *Catcher {
 	}
 }
 
-func (catcher *Catcher) Spawn(props *actor.Props, prefix string, options ...Options) (*actor.PID, error) {
+func (catcher *Catcher) Spawn(props *actor.Props, options ...Options) (*actor.PID, error) {
 	var opt Options
 	if len(options) == 0 {
 		opt = OptDefault
@@ -65,7 +65,7 @@ func (catcher *Catcher) Spawn(props *actor.Props, prefix string, options ...Opti
 		props = props.WithOutboundMiddleware(catcher.OutboundMiddleware)
 	}
 
-	pid, err := actor.SpawnPrefix(props, prefix)
+	pid, err := actor.SpawnPrefix(props, opt.Prefix)
 	if err != nil {
 		return nil, err
 	}

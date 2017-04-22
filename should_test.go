@@ -11,7 +11,7 @@ import (
 func TestShouldReceive(t *testing.T) {
 	a := assert.New(t)
 
-	receiver, _ := SpawnFromFunc(func(ctx actor.Context) {}, "rcv")
+	receiver, _ := SpawnFromFunc(func(ctx actor.Context) {}, OptDefault.WithPrefix("rcv"))
 
 	// Wrong params
 	a.Contains(ShouldReceive(nil), "not an actor PID")
@@ -39,7 +39,7 @@ func TestShouldReceive(t *testing.T) {
 func TestShouldReceiveSomething(t *testing.T) {
 	a := assert.New(t)
 
-	receiver, _ := SpawnFromFunc(func(ctx actor.Context) {}, "rcv")
+	receiver, _ := SpawnFromFunc(func(ctx actor.Context) {}, OptDefault.WithPrefix("rcv"))
 
 	// Wrong params
 	a.Contains(ShouldReceiveSomething(nil), "not an actor PID")
@@ -58,9 +58,9 @@ func TestShouldReceiveSomething(t *testing.T) {
 func TestShouldReceiveFrom(t *testing.T) {
 	a := assert.New(t)
 
-	receiver, _ := SpawnFromFunc(func(ctx actor.Context) {}, "rcv")
-	teller, _ := SpawnFromFunc(func(ctx actor.Context) {}, "tel")
-	requestor, _ := SpawnFromFunc(func(ctx actor.Context) {}, "req")
+	receiver, _ := SpawnFromFunc(func(ctx actor.Context) {}, OptDefault.WithPrefix("rcv"))
+	teller, _ := SpawnFromFunc(func(ctx actor.Context) {}, OptDefault.WithPrefix("tel"))
+	requestor, _ := SpawnFromFunc(func(ctx actor.Context) {}, OptDefault.WithPrefix("req"))
 
 	// Wrong params
 	a.Contains(ShouldReceiveFrom(nil), "not an actor PID")
@@ -100,7 +100,7 @@ func TestShouldReceiveFrom(t *testing.T) {
 func TestShouldReceiveN(t *testing.T) {
 	a := assert.New(t)
 
-	receiver, _ := SpawnFromFunc(func(ctx actor.Context) {}, "rcv")
+	receiver, _ := SpawnFromFunc(func(ctx actor.Context) {}, OptDefault.WithPrefix("rcv"))
 
 	// Wrong params
 	a.Contains(ShouldReceiveN(nil), "not an actor PID")
@@ -143,7 +143,7 @@ func TestShouldSend(t *testing.T) {
 				ctx.Request(receiver, "request from sender")
 			}
 		}
-	}, "snd", catcher.OptOutboundInterceptionOnly)
+	}, catcher.OptOutboundInterceptionOnly.WithPrefix("snd"))
 
 	// Wrong params
 	a.Contains(ShouldSend(nil), "not an actor PID")
@@ -189,7 +189,7 @@ func TestShouldSendTo(t *testing.T) {
 				ctx.Request(receiver, "request from sender")
 			}
 		}
-	}, "snd", catcher.OptOutboundInterceptionOnly)
+	}, catcher.OptOutboundInterceptionOnly.WithPrefix("snd"))
 
 	// Wrong params
 	a.Contains(ShouldSendTo(nil), "not an actor PID")
@@ -241,7 +241,7 @@ func TestShouldSendSomething(t *testing.T) {
 				ctx.Request(receiver, "request from sender")
 			}
 		}
-	}, "snd", catcher.OptOutboundInterceptionOnly)
+	}, catcher.OptOutboundInterceptionOnly.WithPrefix("snd"))
 
 	// Wrong params
 	a.Contains(ShouldSendSomething(nil), "not an actor PID")
@@ -274,7 +274,7 @@ func TestShouldSendN(t *testing.T) {
 				ctx.Request(receiver, "request from sender")
 			}
 		}
-	}, "snd", catcher.OptOutboundInterceptionOnly)
+	}, catcher.OptOutboundInterceptionOnly.WithPrefix("snd"))
 
 	// Wrong params
 	a.Contains(ShouldSendN(nil), "not an actor PID")
@@ -311,7 +311,7 @@ func TestShouldSendN(t *testing.T) {
 func TestShouldNotSendOrReceive(t *testing.T) {
 	a := assert.New(t)
 
-	receiver, _ := SpawnFromFunc(func(ctx actor.Context) {}, "rcv")
+	receiver, _ := SpawnFromFunc(func(ctx actor.Context) {}, OptDefault.WithPrefix("rcv"))
 	sender, _ := SpawnFromFunc(func(ctx actor.Context) {
 		switch m := ctx.Message().(type) {
 		case string:
@@ -321,7 +321,7 @@ func TestShouldNotSendOrReceive(t *testing.T) {
 				ctx.Request(receiver, "request from sender")
 			}
 		}
-	}, "snd", catcher.OptOutboundInterceptionOnly)
+	}, catcher.OptOutboundInterceptionOnly.WithPrefix("snd"))
 
 	// Wrong params
 	a.Contains(ShouldNotSendOrReceive(nil), "not an actor PID")
@@ -348,7 +348,7 @@ func TestShouldNotSendOrReceive(t *testing.T) {
 func TestShouldStart(t *testing.T) {
 	a := assert.New(t)
 
-	receiver, _ := SpawnFromFunc(func(ctx actor.Context) {}, "rcv", OptNoInterception.WithSystemInterception())
+	receiver, _ := SpawnFromFunc(func(ctx actor.Context) {}, OptNoInterception.WithSystemInterception().WithPrefix("rcv"))
 
 	// Wrong params
 	a.Contains(ShouldStart(nil), "not an actor PID")
@@ -363,7 +363,7 @@ func TestShouldStart(t *testing.T) {
 func TestShouldStop(t *testing.T) {
 	a := assert.New(t)
 
-	receiver, _ := SpawnFromFunc(func(ctx actor.Context) {}, "rcv", OptNoInterception.WithSystemInterception())
+	receiver, _ := SpawnFromFunc(func(ctx actor.Context) {}, OptNoInterception.WithSystemInterception().WithPrefix("rcv"))
 
 	// Wrong params
 	a.Contains(ShouldStop(nil), "not an actor PID")
@@ -389,7 +389,7 @@ func TestShouldBeRestarting(t *testing.T) {
 				panic("I am panicing!")
 			}
 		}
-	}, "rcv", OptNoInterception.WithSystemInterception())
+	}, OptNoInterception.WithSystemInterception().WithPrefix("rcv"))
 
 	// Wrong params
 	a.Contains(ShouldBeRestarting(nil), "not an actor PID")
