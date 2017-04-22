@@ -8,12 +8,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-type TestActor struct{}
-
-func (ta *TestActor) Receive(ctx actor.Context) {
-
-}
-
 func TestShouldReceive(t *testing.T) {
 	a := assert.New(t)
 
