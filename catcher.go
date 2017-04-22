@@ -100,11 +100,9 @@ func (catcher *Catcher) ShouldReceiveSysMsg(msg interface{}) string {
 				}
 			}
 		case <-time.After(TEST_TIMEOUT):
-			break
+			return "Timeout while waiting for a system message"
 		}
 	}
-
-	return "Timeout while waiting for a system message"
 }
 
 func (catcher *Catcher) ShouldSend(receiver *actor.PID, msg interface{}) string {
