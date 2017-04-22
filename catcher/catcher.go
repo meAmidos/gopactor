@@ -26,6 +26,7 @@ type Catcher struct {
 	AssignedActor *actor.PID
 
 	LoggingOn bool
+	options   Options
 }
 
 func (catcher *Catcher) id() string {
@@ -53,6 +54,7 @@ func (catcher *Catcher) Spawn(props *actor.Props, prefix string, options ...Opti
 	} else {
 		opt = options[0]
 	}
+	catcher.options = opt
 
 	if opt.EnableInboundInterception {
 		props = props.WithMiddleware(catcher.InboundMiddleware)
