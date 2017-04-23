@@ -183,8 +183,6 @@ func (p *Pact) ShouldSendN(param1 interface{}, params ...interface{}) string {
 	return ""
 }
 
-// TODO: Add a timeout parameter.
-//       Otherwise this will not work for long running "reactions".
 func (p *Pact) ShouldNotSendOrReceive(param1 interface{}, _ ...interface{}) string {
 	object, ok := param1.(*actor.PID)
 	if !ok {

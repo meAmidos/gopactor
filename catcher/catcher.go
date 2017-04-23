@@ -7,10 +7,6 @@ import (
 	"github.com/AsynkronIT/protoactor-go/actor"
 )
 
-const (
-	TEST_TIMEOUT = 3 * time.Millisecond
-)
-
 type Envelope struct {
 	Sender  *actor.PID
 	Target  *actor.PID
@@ -82,8 +78,8 @@ func (catcher *Catcher) ShouldReceive(sender *actor.PID, msg interface{}) string
 		} else {
 			return assertInboundMessage(envelope, msg, sender)
 		}
-	case <-time.After(TEST_TIMEOUT):
-		return "Timeout while waiting for a message"
+	case <-time.After(catcher.options.Timeout):
+		return fmt.Sprintf("Timeout %s while waiting for a message", catcher.options.Timeout)
 	}
 }
 
@@ -102,8 +98,8 @@ func (catcher *Catcher) ShouldReceiveSysMsg(msg interface{}) string {
 					return ""
 				}
 			}
-		case <-time.After(TEST_TIMEOUT):
-			return "Timeout while waiting for a system message"
+		case <-time.After(catcher.options.Timeout):
+			return fmt.Sprintf("Timeout %s while waiting for a system message", catcher.options.Timeout)
 		}
 	}
 }
@@ -116,8 +112,8 @@ func (catcher *Catcher) ShouldSend(receiver *actor.PID, msg interface{}) string 
 		} else {
 			return assertOutboundMessage(envelope, msg, receiver)
 		}
-	case <-time.After(TEST_TIMEOUT):
-		return "Timeout while waiting for sending"
+	case <-time.After(catcher.options.Timeout):
+		return fmt.Sprintf("Timeout %s while waiting for sending", catcher.options.Timeout)
 	}
 }
 
@@ -127,7 +123,7 @@ func (catcher *Catcher) ShouldNotSendOrReceive(pid *actor.PID) string {
 		return fmt.Sprintf("Got outbound message: %#v", envelope.Message)
 	case envelope := <-catcher.ChUserInbound:
 		return fmt.Sprintf("Got inbound message: %#v", envelope.Message)
-	case <-time.After(TEST_TIMEOUT):
+	case <-time.After(catcher.options.Timeout):
 		return ""
 	}
 }
