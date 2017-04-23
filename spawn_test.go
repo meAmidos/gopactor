@@ -58,10 +58,10 @@ func TestSpawnFromFunc(t *testing.T) {
 	PactReset()
 }
 
-func TestSpawnMock(t *testing.T) {
+func TestSpawnNullActor(t *testing.T) {
 	a := assert.New(t)
 
-	_, err := SpawnMock()
+	_, err := SpawnNullActor()
 	a.Nil(err)
 
 	// Cleanup

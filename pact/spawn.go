@@ -34,6 +34,6 @@ func (p *Pact) SpawnFromFunc(f actor.ActorFunc, options ...catcher.Options) (*ac
 	return p.spawn(props, options...)
 }
 
-func (p *Pact) SpawnMock(options ...catcher.Options) (*actor.PID, error) {
+func (p *Pact) SpawnNullActor(options ...catcher.Options) (*actor.PID, error) {
 	return p.SpawnFromInstance(&catcher.NullReceiver{}, options...)
 }

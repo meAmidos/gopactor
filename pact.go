@@ -18,8 +18,8 @@ func SpawnFromFunc(f actor.ActorFunc, options ...catcher.Options) (*actor.PID, e
 	return pact.DEFAULT_PACT.SpawnFromFunc(f, options...)
 }
 
-func SpawnMock(options ...catcher.Options) (*actor.PID, error) {
-	return pact.DEFAULT_PACT.SpawnMock(options...)
+func SpawnNullActor(options ...catcher.Options) (*actor.PID, error) {
+	return pact.DEFAULT_PACT.SpawnNullActor(options...)
 }
 
 func PactReset() {
