@@ -2,7 +2,7 @@
 // when spawning actors. You can build a custom set of
 // options for every actor you test with Gopactor.
 //
-// Exmaple
+// Example
 //
 //   // The actor should use prefix "sender"
 //   // and Gopactor should only intercept outbound messages

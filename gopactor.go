@@ -7,33 +7,32 @@ Main features:
 Intercept messages
 
 For any actor you want to test, Gopactor can intercept all it's inbound and outbound
-messages. It can be very useful when you want to test the actor's behavior. Moreover,
-interception forces a naturally asynchronous actor to act in a more synchronous way that
-is much easier to reason about. So, messages are sent and received under the
-control of Gopactor, step by step.
+messages. It is probably exactly what you want to do when you test the actor's behavior.
+Moreover, interception forces a naturally asynchronous actor to act in a more synchronous way.
+When messages are sent and received under the control of Gopactor, it is much easier to reason about
+the actor's logic and examine its communication with the outside world step by step.
 
 Intercept system messages
 
-Protoactor uses some specific system messages to control the lifecycle of an actor.
-Gopactor can intercept some of such messages to help you test that your actor stops or restarts
-when expected.
+Protoactor uses special system messages to control the lifecycle of an actor.
+Gopactor can intercept some of such messages to help you ensure that your actor
+stops or restarts when expected.
 
 Intercept spawning of children
 
 It is a common pattern to let actors spawn child actors and communicate with them.
 Good as it is, this pattern often stays in the way of writing deterministic tests.
 Given that child-spawning and communication happen in the background asynchronously,
-it can be seen more like a side-effect that can interfere with our tests in many
+it can be seen more like a side-effect that can interfere with your tests in many
 unpredictable ways.
 
-So, the current Gopactor's approach is to intercept all spawn invocations and instead of
-spawning what is requested, spawn no-op null-actors that are guaranteed to not communicate
-with parents in any way. It is planned to evolve this approach to something even more
-useful and configurable in the future.
+The current Gopactor's approach is to intercept all spawn invocations and instead of
+spawning what is requested, spawn no-op null-actors. These actors are guaranteed
+to not communicate with their parents in any way.
 
 Goconvey-style assertions
 
-Gopactor provides a bunch of assertion functions to be used with the very popular testing
+Gopactor provides a bunch of assertion functions to be used with the popular testing
 framework Goconvey (http://goconvey.co/). For instance,
 
 	So(worker, ShouldReceive, "ping")
