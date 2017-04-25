@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/AsynkronIT/protoactor-go/actor"
-	"github.com/meamidos/pact/catcher"
+	"github.com/meamidos/pact/options"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -143,7 +143,7 @@ func TestShouldSend(t *testing.T) {
 				ctx.Request(receiver, "request from sender")
 			}
 		}
-	}, catcher.OptOutboundInterceptionOnly.WithPrefix("snd"))
+	}, options.OptOutboundInterceptionOnly.WithPrefix("snd"))
 
 	// Wrong params
 	a.Contains(ShouldSend(nil), "not an actor PID")
@@ -189,7 +189,7 @@ func TestShouldSendTo(t *testing.T) {
 				ctx.Request(receiver, "request from sender")
 			}
 		}
-	}, catcher.OptOutboundInterceptionOnly.WithPrefix("snd"))
+	}, options.OptOutboundInterceptionOnly.WithPrefix("snd"))
 
 	// Wrong params
 	a.Contains(ShouldSendTo(nil), "not an actor PID")
@@ -241,7 +241,7 @@ func TestShouldSendSomething(t *testing.T) {
 				ctx.Request(receiver, "request from sender")
 			}
 		}
-	}, catcher.OptOutboundInterceptionOnly.WithPrefix("snd"))
+	}, options.OptOutboundInterceptionOnly.WithPrefix("snd"))
 
 	// Wrong params
 	a.Contains(ShouldSendSomething(nil), "not an actor PID")
@@ -274,7 +274,7 @@ func TestShouldSendN(t *testing.T) {
 				ctx.Request(receiver, "request from sender")
 			}
 		}
-	}, catcher.OptOutboundInterceptionOnly.WithPrefix("snd"))
+	}, options.OptOutboundInterceptionOnly.WithPrefix("snd"))
 
 	// Wrong params
 	a.Contains(ShouldSendN(nil), "not an actor PID")
@@ -321,7 +321,7 @@ func TestShouldNotSendOrReceive(t *testing.T) {
 				ctx.Request(receiver, "request from sender")
 			}
 		}
-	}, catcher.OptOutboundInterceptionOnly.WithPrefix("snd"))
+	}, options.OptOutboundInterceptionOnly.WithPrefix("snd"))
 
 	// Wrong params
 	a.Contains(ShouldNotSendOrReceive(nil), "not an actor PID")

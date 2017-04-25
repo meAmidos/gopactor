@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/AsynkronIT/protoactor-go/actor"
+	"github.com/meamidos/pact/options"
 )
 
 // All intercepted messages are wrapped in an envelope
@@ -26,7 +27,7 @@ type Catcher struct {
 	AssignedActor *actor.PID
 
 	LoggingOn bool
-	options   Options
+	options   options.Options
 }
 
 // This is used for logging purposes only
@@ -49,12 +50,12 @@ func New() *Catcher {
 }
 
 // Spawn an actor with injected middleware.
-func (catcher *Catcher) Spawn(props *actor.Props, options ...Options) (*actor.PID, error) {
-	var opt Options
-	if len(options) == 0 {
-		opt = OptDefault
+func (catcher *Catcher) Spawn(props *actor.Props, opts ...options.Options) (*actor.PID, error) {
+	var opt options.Options
+	if len(opts) == 0 {
+		opt = options.OptDefault
 	} else {
-		opt = options[0]
+		opt = opts[0]
 	}
 
 	catcher.options = opt

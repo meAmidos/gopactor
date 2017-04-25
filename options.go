@@ -1,10 +1,10 @@
 package pact
 
-import "github.com/meamidos/pact/catcher"
+import "github.com/meamidos/pact/options"
 
 var (
-	OptNoInterception           = catcher.OptNoInterception
-	OptDefault                  = catcher.OptDefault
-	OptOutboundInterceptionOnly = catcher.OptOutboundInterceptionOnly
-	OptInboundInterceptionOnly  = catcher.OptInboundInterceptionOnly
+	OptNoInterception           = options.OptNoInterception
+	OptDefault                  = options.OptDefault
+	OptOutboundInterceptionOnly = options.OptOutboundInterceptionOnly
+	OptInboundInterceptionOnly  = options.OptInboundInterceptionOnly
 )

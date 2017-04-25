@@ -1,4 +1,4 @@
-package catcher
+package options
 
 import "time"
 
