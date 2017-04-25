@@ -12,7 +12,7 @@ Any contribution to this project will be highly appreciated!
 ## Example of usage
 Here is a short example. We'll define and test a simple worker actor that can do only one thing: respond "pong" when it receives "ping".
 
-```
+```go
 package worker_test
 
 import (
@@ -84,7 +84,7 @@ So, the current Gopactor's approach is to intercept all spawn invocations and in
 ### Goconvey-style assertions
 Gopactor provides a bunch of assertion functions to be used with the very popular testing framework Goconvey (http://goconvey.co/). For instance,
 
-```
+```go
 So(worker, ShouldReceive, "ping")
 So(worker, ShouldSendTo, requestor, "pong")
 ```
@@ -92,7 +92,7 @@ So(worker, ShouldSendTo, requestor, "pong")
 ### Configurable
 For every tested actor, you can define what you want to intercept: inbound, outbound or system messages. Or everything. Or nothing at all. You can also set a custom timeout:
 
-```
+```go
 options := OptNoInterception.
     WithOutboundInterception().
     WithPrefix("my-actor").
@@ -100,7 +100,7 @@ options := OptNoInterception.
 ```
 
 ## Supported assertions
-```
+```go
 ShouldReceive
 ShouldReceiveFrom
 ShouldReceiveSomething
