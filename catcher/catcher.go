@@ -7,12 +7,16 @@ import (
 	"github.com/AsynkronIT/protoactor-go/actor"
 )
 
+// All intercepted messages are wrapped in an envelope
 type Envelope struct {
 	Sender  *actor.PID
 	Target  *actor.PID
 	Message interface{}
 }
 
+// Catcher is the working horse of the interception mechanism.
+// It seats in front of every tested actor and watches for
+// messages and system events.
 type Catcher struct {
 	ChSystemInbound chan *Envelope
 	ChUserInbound   chan *Envelope
@@ -25,6 +29,7 @@ type Catcher struct {
 	options   Options
 }
 
+// This is used for logging purposes only
 func (catcher *Catcher) id() string {
 	if catcher.AssignedActor != nil {
 		return catcher.AssignedActor.String()
@@ -43,6 +48,7 @@ func New() *Catcher {
 	}
 }
 
+// Spawn an actor with injected middleware.
 func (catcher *Catcher) Spawn(props *actor.Props, options ...Options) (*actor.PID, error) {
 	var opt Options
 	if len(options) == 0 {

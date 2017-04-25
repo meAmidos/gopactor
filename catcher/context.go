@@ -7,7 +7,7 @@ type NullReceiver struct{}
 func (nr *NullReceiver) Receive(ctx actor.Context) {}
 
 // This is a wrapper around a real actor.Context object
-// to intercept calls for testing perposes.
+// to intercept calls for testing purposes.
 // This should implement the actor.Context interface
 type Context struct {
 	actor.Context // This is the original context to pass calls to

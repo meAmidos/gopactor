@@ -8,7 +8,7 @@ func (catcher *Catcher) inboundMiddleware(next actor.ActorFunc) actor.ActorFunc 
 	return func(ctx actor.Context) {
 		catcher.processInboundMessage(ctx)
 
-		// Swap the context with it's thin wrapper which intercepts some calls.
+		// Swap the context with a thin wrapper which intercepts some calls.
 		if _, ok := ctx.(*Context); !ok {
 			ctx = NewContext(ctx)
 		}
