@@ -6,8 +6,9 @@ import (
 	"github.com/AsynkronIT/protoactor-go/actor"
 )
 
-// Should receive a given message.
-// It does not matter who is the sender.
+// ShouldReceive is an assertion method. Its rules are:
+// - The receiver should receive a given message.
+// - It does not matter who is the sender.
 func (p *Gopactor) ShouldReceive(param1 interface{}, params ...interface{}) string {
 	receiver, ok := param1.(*actor.PID)
 	if !ok {
@@ -23,7 +24,8 @@ func (p *Gopactor) ShouldReceive(param1 interface{}, params ...interface{}) stri
 	return p.shouldReceive(receiver, nil, expectedMsg)
 }
 
-// Should receive a given message from a given sender
+// ShouldReceiveFrom is an assertion method. Its rules are:
+// - The receiver should receive a given message from a given sender.
 func (p *Gopactor) ShouldReceiveFrom(param1 interface{}, params ...interface{}) string {
 	receiver, ok := param1.(*actor.PID)
 	if !ok {
@@ -45,7 +47,9 @@ func (p *Gopactor) ShouldReceiveFrom(param1 interface{}, params ...interface{}) 
 	return p.shouldReceive(receiver, sender, expectedMsg)
 }
 
-// Should receive at least something
+// ShouldReceiveSomething is an assertion method. Its rules are:
+// - The receiver should receive at least one message of any kind.
+// - It does not matter who is the sender.
 func (p *Gopactor) ShouldReceiveSomething(param1 interface{}, _ ...interface{}) string {
 	receiver, ok := param1.(*actor.PID)
 	if !ok {
@@ -55,7 +59,9 @@ func (p *Gopactor) ShouldReceiveSomething(param1 interface{}, _ ...interface{}) 
 	return p.shouldReceive(receiver, nil, nil)
 }
 
-// Should receive N any messages
+// ShouldReceiveN is an assertion method. Its rules are:
+// - The receiver should receive N messages of any kind.
+// - It does not matter who is the sender.
 func (p *Gopactor) ShouldReceiveN(param1 interface{}, params ...interface{}) string {
 	receiver, ok := param1.(*actor.PID)
 	if !ok {
@@ -81,6 +87,8 @@ func (p *Gopactor) ShouldReceiveN(param1 interface{}, params ...interface{}) str
 	return ""
 }
 
+// ShouldStart is an assertion method. Its rules are:
+// - The actor should receive a system message that indicates the actor has been started.
 func (p *Gopactor) ShouldStart(param1 interface{}, _ ...interface{}) string {
 	pid, ok := param1.(*actor.PID)
 	if !ok {
@@ -90,6 +98,8 @@ func (p *Gopactor) ShouldStart(param1 interface{}, _ ...interface{}) string {
 	return p.shouldStart(pid)
 }
 
+// ShouldStop is an assertion method. Its rules are:
+// - The actor should receive a system message that indicates the actor has been stopped.
 func (p *Gopactor) ShouldStop(param1 interface{}, _ ...interface{}) string {
 	pid, ok := param1.(*actor.PID)
 	if !ok {
@@ -99,6 +109,8 @@ func (p *Gopactor) ShouldStop(param1 interface{}, _ ...interface{}) string {
 	return p.shouldStop(pid)
 }
 
+// ShouldBeRestarting is an assertion method. Its rules are:
+// - The actor should receive a system message that indicates the actor is being restarted.
 func (p *Gopactor) ShouldBeRestarting(param1 interface{}, _ ...interface{}) string {
 	pid, ok := param1.(*actor.PID)
 	if !ok {
@@ -108,8 +120,9 @@ func (p *Gopactor) ShouldBeRestarting(param1 interface{}, _ ...interface{}) stri
 	return p.shouldBeRestarting(pid)
 }
 
-// Should send one given message.
-// Who is the receiver does not matter.
+// ShouldSend is an assertion method. Its rules are:
+// - The sender should send one given message.
+// - It does not matter who is the receiver of the message.
 func (p *Gopactor) ShouldSend(param1 interface{}, params ...interface{}) string {
 	sender, ok := param1.(*actor.PID)
 	if !ok {
@@ -126,7 +139,8 @@ func (p *Gopactor) ShouldSend(param1 interface{}, params ...interface{}) string 
 	return p.shouldSend(sender, nil, expectedMsg)
 }
 
-// Should send one given message to the specified receiver.
+// ShouldSendTo is an assertion method. Its rules are:
+// - The sender should send one given message to the specified receiver.
 func (p *Gopactor) ShouldSendTo(param1 interface{}, params ...interface{}) string {
 	sender, ok := param1.(*actor.PID)
 	if !ok {
@@ -148,6 +162,9 @@ func (p *Gopactor) ShouldSendTo(param1 interface{}, params ...interface{}) strin
 	return p.shouldSend(sender, receiver, expectedMsg)
 }
 
+// ShouldSendSomething is an assertion method. Its rules are:
+// - The sender should send at least one message of any kind.
+// - It does not matter who is the receiver of the message.
 func (p *Gopactor) ShouldSendSomething(param1 interface{}, _ ...interface{}) string {
 	sender, ok := param1.(*actor.PID)
 	if !ok {
@@ -157,7 +174,9 @@ func (p *Gopactor) ShouldSendSomething(param1 interface{}, _ ...interface{}) str
 	return p.shouldSend(sender, nil, nil)
 }
 
-// Should send N any messages
+// ShouldSendN is an assertion method. Its rules are:
+// - The sender should send N messages of any kind.
+// - It does not matter who are the receivers.
 func (p *Gopactor) ShouldSendN(param1 interface{}, params ...interface{}) string {
 	sender, ok := param1.(*actor.PID)
 	if !ok {
@@ -183,6 +202,8 @@ func (p *Gopactor) ShouldSendN(param1 interface{}, params ...interface{}) string
 	return ""
 }
 
+// ShouldNotSendOrReceive is an assertion method. Its rules are:
+// - The actor should not send or receive any message.
 func (p *Gopactor) ShouldNotSendOrReceive(param1 interface{}, _ ...interface{}) string {
 	object, ok := param1.(*actor.PID)
 	if !ok {

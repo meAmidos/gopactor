@@ -1,4 +1,4 @@
-// Configuration options that are used by Gopactor
+// Package options defines configuration options that are used by Gopactor
 // when spawning actors. You can build a custom set of
 // options for every actor you test with Gopactor.
 //
@@ -26,16 +26,16 @@ package options
 
 import "time"
 
-// This timeout is used when waiting for inbound/outbound messages.
+// DEFAULT_TIMEOUT value is used when no custom timeout has been specified.
 // Three milliseconds is long enough to allow for some regular operations
 // in an actor to complete and for messages to be emitted. At the same
 // time, it is short enough to keep testing reasonably fast even when
 // you use hundreds of assertions.
 const DEFAULT_TIMEOUT = 3 * time.Millisecond
 
-// For each actor you test with Gopactor, you can define a custom set of
-// options. The most useful ones are those that allow enabling
-// interception selectively.
+// Options is a container for individual configuration options used by Gopactor.
+// For each actor you test with Gopactor, you can build a custom set of
+// options.
 type Options struct {
 	InboundInterceptionEnabled  bool
 	OutboundInterceptionEnabled bool
@@ -46,17 +46,19 @@ type Options struct {
 	// and want the actor's PID to have a meaningful value.
 	Prefix string
 
-	// The maximum amount of time to wait for an expected message.
+	// The maximum amount of time to wait for an expected inbound or outbound message.
 	// This applies to all assertions for a given actor.
 	Timeout time.Duration
 }
 
-// Predefined configuration: interception is disabled.
+// OptNoInterception is one of predefined configurations:
+// - interception is disabled
 var OptNoInterception = Options{
 	Timeout: DEFAULT_TIMEOUT,
 }
 
-// Predefined configuration for the most common scenario.
+// OptDefault is one of predefined configurations.
+// It is used by Gopactor when no configuration is provided.
 var OptDefault = Options{
 	InboundInterceptionEnabled:  true,
 	OutboundInterceptionEnabled: true,
@@ -64,43 +66,45 @@ var OptDefault = Options{
 	Timeout:                     DEFAULT_TIMEOUT,
 }
 
-// Predefined configuration: intercept outbound messages only.
+// OptOutboundInterceptionOnly is one of predefined configurations:
+// - intercept outbound messages only
 var OptOutboundInterceptionOnly = Options{
 	OutboundInterceptionEnabled: true,
 	Timeout:                     DEFAULT_TIMEOUT,
 }
 
-// Predefined configuration: intercept inbound messages only.
+// OptInboundInterceptionOnly is one of predefined configurations:
+// - intercept inbound messages only
 var OptInboundInterceptionOnly = Options{
 	InboundInterceptionEnabled: true,
 	Timeout:                    DEFAULT_TIMEOUT,
 }
 
-// A helper to add inbound interception to options
+// WithInboundInterception is a helper method to add inbound interception to options
 func (opt Options) WithInboundInterception() Options {
 	opt.InboundInterceptionEnabled = true
 	return opt
 }
 
-// A helper to add outbound interception to options
+// WithOutboundInterception is a helper method to add outbound interception to options
 func (opt Options) WithOutboundInterception() Options {
 	opt.OutboundInterceptionEnabled = true
 	return opt
 }
 
-// A helper to add system messages interception to options
+// WithSystemInterception is a helper method to add system messages interception to options
 func (opt Options) WithSystemInterception() Options {
 	opt.SystemInterceptionEnabled = true
 	return opt
 }
 
-// A helper to add prefix to options
+// WithPrefix is a helper method to add prefix to options
 func (opt Options) WithPrefix(prefix string) Options {
 	opt.Prefix = prefix
 	return opt
 }
 
-// A helper to add timeout to options
+// WithTimeout is a helper to add timeout to options
 func (opt Options) WithTimeout(timeout time.Duration) Options {
 	opt.Timeout = timeout
 	return opt

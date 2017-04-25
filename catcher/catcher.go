@@ -8,7 +8,7 @@ import (
 	"github.com/meamidos/gopactor/options"
 )
 
-// All intercepted messages are wrapped in an envelope
+// Envelope is a wrapper that is used for all intercepted messages
 type Envelope struct {
 	Sender  *actor.PID
 	Target  *actor.PID
@@ -39,6 +39,7 @@ func (catcher *Catcher) id() string {
 	return "-"
 }
 
+// New creates a new instance of Catcher.
 func New() *Catcher {
 	return &Catcher{
 		ChSystemInbound: make(chan *Envelope, 10),

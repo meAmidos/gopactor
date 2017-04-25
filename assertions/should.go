@@ -6,21 +6,21 @@ package assertions
 
 import "github.com/meamidos/gopactor/gopactor"
 
-// Assert that a given message is received by the actor
+// ShouldReceive asserts that a given message is received by the actor
 // and it does not matter who is the sender:
 //   So(myActor, ShouldReceive, "ping")
 func ShouldReceive(actual interface{}, expected ...interface{}) string {
 	return gopactor.DEFAULT_GOPACTOR.ShouldReceive(actual, expected...)
 }
 
-// Assert that a given message is received by the actor
+// ShouldReceiveFrom asserts that a given message is received by the actor
 // and it is received from a certain sender:
 //   So(myActor, ShouldReceiveFrom, sender, "ping")
 func ShouldReceiveFrom(actual interface{}, expected ...interface{}) string {
 	return gopactor.DEFAULT_GOPACTOR.ShouldReceiveFrom(actual, expected...)
 }
 
-// Assert that some message is received by the actor
+// ShouldReceiveSomething asserts that some message is received by the actor
 // and it does not matter who is the sender
 // and what is in the message:
 //   So(myActor, ShouldReceiveSomething)
@@ -28,7 +28,7 @@ func ShouldReceiveSomething(actual interface{}, expected ...interface{}) string 
 	return gopactor.DEFAULT_GOPACTOR.ShouldReceiveSomething(actual, expected...)
 }
 
-// Assert that any N messages are received by the actor
+// ShouldReceiveN asserts that any N messages are received by the actor
 // and it does not matter who has sent them
 // and what is the content of the messages:
 //   So(myActor, ShouldReceiveN)
@@ -36,21 +36,21 @@ func ShouldReceiveN(actual interface{}, params ...interface{}) string {
 	return gopactor.DEFAULT_GOPACTOR.ShouldReceiveN(actual, params...)
 }
 
-// Assert that a given message is sent by the actor
+// ShouldSend asserts that a given message is sent by the actor
 // and it does not matter who is the receiver:
 //   So(myActor, ShouldSend, "ping")
 func ShouldSend(actual interface{}, expected ...interface{}) string {
 	return gopactor.DEFAULT_GOPACTOR.ShouldSend(actual, expected...)
 }
 
-// Assert that a given message is sent by the actor
+// ShouldSendTo asserts that a given message is sent by the actor
 // and it is addressed to a certain receiver:
 //   So(myActor, ShouldSendTo, receiver, "ping")
 func ShouldSendTo(actual interface{}, expected ...interface{}) string {
 	return gopactor.DEFAULT_GOPACTOR.ShouldSendTo(actual, expected...)
 }
 
-// Assert that some message is sent by the actor
+// ShouldSendSomething asserts that some message is sent by the actor
 // and it does not matter who is the receiver
 // and what is in the message:
 //   So(myActor, ShouldSendSomething)
@@ -58,7 +58,7 @@ func ShouldSendSomething(actual interface{}, _ ...interface{}) string {
 	return gopactor.DEFAULT_GOPACTOR.ShouldSendSomething(actual)
 }
 
-// Assert that any N messages are sent by the actor
+// ShouldSendN asserts that any N messages are sent by the actor
 // and it does not matter who they are addressed to
 // and what is the content of the messages:
 //   So(myActor, ShouldSendN)
@@ -66,7 +66,7 @@ func ShouldSendN(actual interface{}, params ...interface{}) string {
 	return gopactor.DEFAULT_GOPACTOR.ShouldSendN(actual, params...)
 }
 
-// Assert that the actor does not send or receive
+// ShouldNotSendOrReceive asserts that the actor does not send or receive
 // anything during the given period of time (which you specify
 // in options when you spawn the actor using Gopactor).
 //   So(myActor, ShouldNotSendOrReceive)
@@ -74,20 +74,20 @@ func ShouldNotSendOrReceive(actual interface{}, _ ...interface{}) string {
 	return gopactor.DEFAULT_GOPACTOR.ShouldNotSendOrReceive(actual)
 }
 
-// Assert that the actor has formally started.
+// ShouldStart asserts that the actor has formally started.
 // That is, it has received the &actor.Started{} message.
 //   So(myActor, ShouldStart)
 func ShouldStart(actual interface{}, _ ...interface{}) string {
 	return gopactor.DEFAULT_GOPACTOR.ShouldStart(actual)
 }
 
-// Assert that the actor has stopped.
+// ShouldStop asserts that the actor has stopped.
 //   So(myActor, ShouldStop)
 func ShouldStop(actual interface{}, _ ...interface{}) string {
 	return gopactor.DEFAULT_GOPACTOR.ShouldStop(actual)
 }
 
-// Assert that the actor is restarting
+// ShouldBeRestarting asserts that the actor is restarting
 //   So(myActor, ShouldBeRestarting)
 func ShouldBeRestarting(actual interface{}, _ ...interface{}) string {
 	return gopactor.DEFAULT_GOPACTOR.ShouldBeRestarting(actual)

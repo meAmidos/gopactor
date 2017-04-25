@@ -5,17 +5,22 @@ import (
 	"github.com/meamidos/gopactor/catcher"
 )
 
+// Gopactor represents a group catchers.
+// Each catcher is identified by the PID of the actor
+// the catcher followes.
 type Gopactor struct {
 	CatchersByPID map[string]*catcher.Catcher
 	LoggingOn     bool
 }
 
+// New creates a new instance of Gopactor
 func New() *Gopactor {
 	p := &Gopactor{}
 	p.Reset()
 	return p
 }
 
+// Resets cleans up the Gopactor instance
 func (p *Gopactor) Reset() {
 	p.CatchersByPID = make(map[string]*catcher.Catcher)
 }
