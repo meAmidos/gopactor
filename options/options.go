@@ -35,9 +35,9 @@ const DEFAULT_TIMEOUT = 3 * time.Millisecond
 // options. The most useful ones are those that allow enabling
 // interception selectively.
 type Options struct {
-	EnableInboundInterception  bool
-	EnableOutboundInterception bool
-	EnableSystemInterception   bool
+	InboundInterceptionEnabled  bool
+	OutboundInterceptionEnabled bool
+	SystemInterceptionEnabled   bool
 
 	// A prefix of the spawned actor name.
 	// It is useful mostly in cases when you debug your application
@@ -56,39 +56,39 @@ var OptNoInterception = Options{
 
 // Predefined configuration for the most common scenario.
 var OptDefault = Options{
-	EnableInboundInterception:  true,
-	EnableOutboundInterception: true,
-	EnableSystemInterception:   false,
-	Timeout:                    DEFAULT_TIMEOUT,
+	InboundInterceptionEnabled:  true,
+	OutboundInterceptionEnabled: true,
+	SystemInterceptionEnabled:   false,
+	Timeout:                     DEFAULT_TIMEOUT,
 }
 
 // Predefined configuration: intercept outbound messages only.
 var OptOutboundInterceptionOnly = Options{
-	EnableOutboundInterception: true,
-	Timeout:                    DEFAULT_TIMEOUT,
+	OutboundInterceptionEnabled: true,
+	Timeout:                     DEFAULT_TIMEOUT,
 }
 
 // Predefined configuration: intercept inbound messages only.
 var OptInboundInterceptionOnly = Options{
-	EnableInboundInterception: true,
-	Timeout:                   DEFAULT_TIMEOUT,
+	InboundInterceptionEnabled: true,
+	Timeout:                    DEFAULT_TIMEOUT,
 }
 
 // A helper to add inbound interception to options
 func (opt Options) WithInboundInterception() Options {
-	opt.EnableInboundInterception = true
+	opt.InboundInterceptionEnabled = true
 	return opt
 }
 
 // A helper to add outbound interception to options
 func (opt Options) WithOutboundInterception() Options {
-	opt.EnableOutboundInterception = true
+	opt.OutboundInterceptionEnabled = true
 	return opt
 }
 
 // A helper to add system messages interception to options
 func (opt Options) WithSystemInterception() Options {
-	opt.EnableSystemInterception = true
+	opt.SystemInterceptionEnabled = true
 	return opt
 }
 
