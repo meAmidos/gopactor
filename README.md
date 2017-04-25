@@ -2,6 +2,7 @@
 Gopactor is a set of tools to simplify writing BDD tests for actors created with [Protoactor](https://github.com/AsynkronIT/protoactor-go).
 
 [![GoDoc](https://godoc.org/github.com/meAmidos/gopactor?status.svg)](https://godoc.org/github.com/meAmidos/gopactor)
+[![Go Report Card](https://goreportcard.com/badge/github.com/meAmidos/gopactor)](https://goreportcard.com/report/github.com/meAmidos/gopactor)
 
 Currently, the main focus is to provide convenient assertions for tests written using the [Goconvey](http://goconvey.co/) framework. However, all provided assertions can potentially be used independently, and it is easy to write an adapter to whatever matcher/assertion library you prefer.
 
