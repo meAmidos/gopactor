@@ -1,10 +1,10 @@
-package pact
+package gopactor
 
 import (
 	"testing"
 
 	"github.com/AsynkronIT/protoactor-go/actor"
-	"github.com/meamidos/pact/options"
+	"github.com/meamidos/gopactor/options"
 	"github.com/stretchr/testify/assert"
 )
 

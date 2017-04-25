@@ -1,6 +1,6 @@
-package pact
+package gopactor
 
-import "github.com/meamidos/pact/assertions"
+import "github.com/meamidos/gopactor/assertions"
 
 // These assertions are mostly self-explanatory,
 // but it may be helpful to go through some examples

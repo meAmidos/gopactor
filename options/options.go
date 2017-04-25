@@ -1,17 +1,17 @@
-// Configuration options that are used by Pact
+// Configuration options that are used by Gopactor
 // when spawning actors. You can build a custom set of
-// options for every actor you test with Pact.
+// options for every actor you test with Gopactor.
 //
 // Exmaple
 //
 //   // The actor should use prefix "sender"
-//   // and Pact should only intercept outbound messages
+//   // and Gopactor should only intercept outbound messages
 //   // for this actor.
 //   // In addition, allow extra time when waiting for the actor to send something.
 //   opt1 := OptOutboundInterceptionOnly.WithPrefix("sender").WithTimeout(time.Second)
 //   actor1, _ := SpawnFromInstance(&MyActor{}, opt1)
 //
-//   // Pact should listen only to system messages received by the actor
+//   // Gopactor should listen only to system messages received by the actor
 //   opt2 := OptNoInterception.WithOutboundInterception()
 //   actor2, _ := SpawnFromInstance(&MyActor{}, opt2)
 //
@@ -31,7 +31,7 @@ import "time"
 // you use hundreds of assertions.
 const DEFAULT_TIMEOUT = 3 * time.Millisecond
 
-// For each actor you test with Pact, you can define a custom set of
+// For each actor you test with Gopactor, you can define a custom set of
 // options. The most useful ones are those that allow enabling
 // interception selectively.
 type Options struct {

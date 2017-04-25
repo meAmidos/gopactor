@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/AsynkronIT/protoactor-go/actor"
-	"github.com/meamidos/pact/options"
+	"github.com/meamidos/gopactor/options"
 )
 
 // All intercepted messages are wrapped in an envelope

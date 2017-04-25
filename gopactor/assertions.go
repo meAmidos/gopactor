@@ -1,4 +1,4 @@
-package pact
+package gopactor
 
 import (
 	"fmt"
@@ -8,7 +8,7 @@ import (
 
 // Should receive a given message.
 // It does not matter who is the sender.
-func (p *Pact) ShouldReceive(param1 interface{}, params ...interface{}) string {
+func (p *Gopactor) ShouldReceive(param1 interface{}, params ...interface{}) string {
 	receiver, ok := param1.(*actor.PID)
 	if !ok {
 		return "Receiver is not an actor PID"
@@ -24,7 +24,7 @@ func (p *Pact) ShouldReceive(param1 interface{}, params ...interface{}) string {
 }
 
 // Should receive a given message from a given sender
-func (p *Pact) ShouldReceiveFrom(param1 interface{}, params ...interface{}) string {
+func (p *Gopactor) ShouldReceiveFrom(param1 interface{}, params ...interface{}) string {
 	receiver, ok := param1.(*actor.PID)
 	if !ok {
 		return "Receiver is not an actor PID"
@@ -46,7 +46,7 @@ func (p *Pact) ShouldReceiveFrom(param1 interface{}, params ...interface{}) stri
 }
 
 // Should receive at least something
-func (p *Pact) ShouldReceiveSomething(param1 interface{}, _ ...interface{}) string {
+func (p *Gopactor) ShouldReceiveSomething(param1 interface{}, _ ...interface{}) string {
 	receiver, ok := param1.(*actor.PID)
 	if !ok {
 		return "Receiver is not an actor PID"
@@ -56,7 +56,7 @@ func (p *Pact) ShouldReceiveSomething(param1 interface{}, _ ...interface{}) stri
 }
 
 // Should receive N any messages
-func (p *Pact) ShouldReceiveN(param1 interface{}, params ...interface{}) string {
+func (p *Gopactor) ShouldReceiveN(param1 interface{}, params ...interface{}) string {
 	receiver, ok := param1.(*actor.PID)
 	if !ok {
 		return "Receiver is not an actor PID"
@@ -81,7 +81,7 @@ func (p *Pact) ShouldReceiveN(param1 interface{}, params ...interface{}) string 
 	return ""
 }
 
-func (p *Pact) ShouldStart(param1 interface{}, _ ...interface{}) string {
+func (p *Gopactor) ShouldStart(param1 interface{}, _ ...interface{}) string {
 	pid, ok := param1.(*actor.PID)
 	if !ok {
 		return "Object is not an actor PID"
@@ -90,7 +90,7 @@ func (p *Pact) ShouldStart(param1 interface{}, _ ...interface{}) string {
 	return p.shouldStart(pid)
 }
 
-func (p *Pact) ShouldStop(param1 interface{}, _ ...interface{}) string {
+func (p *Gopactor) ShouldStop(param1 interface{}, _ ...interface{}) string {
 	pid, ok := param1.(*actor.PID)
 	if !ok {
 		return "Object is not an actor PID"
@@ -99,7 +99,7 @@ func (p *Pact) ShouldStop(param1 interface{}, _ ...interface{}) string {
 	return p.shouldStop(pid)
 }
 
-func (p *Pact) ShouldBeRestarting(param1 interface{}, _ ...interface{}) string {
+func (p *Gopactor) ShouldBeRestarting(param1 interface{}, _ ...interface{}) string {
 	pid, ok := param1.(*actor.PID)
 	if !ok {
 		return "Object is not an actor PID"
@@ -110,7 +110,7 @@ func (p *Pact) ShouldBeRestarting(param1 interface{}, _ ...interface{}) string {
 
 // Should send one given message.
 // Who is the receiver does not matter.
-func (p *Pact) ShouldSend(param1 interface{}, params ...interface{}) string {
+func (p *Gopactor) ShouldSend(param1 interface{}, params ...interface{}) string {
 	sender, ok := param1.(*actor.PID)
 	if !ok {
 		return "Sender is not an actor PID"
@@ -127,7 +127,7 @@ func (p *Pact) ShouldSend(param1 interface{}, params ...interface{}) string {
 }
 
 // Should send one given message to the specified receiver.
-func (p *Pact) ShouldSendTo(param1 interface{}, params ...interface{}) string {
+func (p *Gopactor) ShouldSendTo(param1 interface{}, params ...interface{}) string {
 	sender, ok := param1.(*actor.PID)
 	if !ok {
 		return "Sender is not an actor PID"
@@ -148,7 +148,7 @@ func (p *Pact) ShouldSendTo(param1 interface{}, params ...interface{}) string {
 	return p.shouldSend(sender, receiver, expectedMsg)
 }
 
-func (p *Pact) ShouldSendSomething(param1 interface{}, _ ...interface{}) string {
+func (p *Gopactor) ShouldSendSomething(param1 interface{}, _ ...interface{}) string {
 	sender, ok := param1.(*actor.PID)
 	if !ok {
 		return "Sender is not an actor PID"
@@ -158,7 +158,7 @@ func (p *Pact) ShouldSendSomething(param1 interface{}, _ ...interface{}) string 
 }
 
 // Should send N any messages
-func (p *Pact) ShouldSendN(param1 interface{}, params ...interface{}) string {
+func (p *Gopactor) ShouldSendN(param1 interface{}, params ...interface{}) string {
 	sender, ok := param1.(*actor.PID)
 	if !ok {
 		return "Sender is not an actor PID"
@@ -183,7 +183,7 @@ func (p *Pact) ShouldSendN(param1 interface{}, params ...interface{}) string {
 	return ""
 }
 
-func (p *Pact) ShouldNotSendOrReceive(param1 interface{}, _ ...interface{}) string {
+func (p *Gopactor) ShouldNotSendOrReceive(param1 interface{}, _ ...interface{}) string {
 	object, ok := param1.(*actor.PID)
 	if !ok {
 		return "Object is not an actor PID"

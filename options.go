@@ -1,6 +1,6 @@
-package pact
+package gopactor
 
-import "github.com/meamidos/pact/options"
+import "github.com/meamidos/gopactor/options"
 
 var (
 	OptNoInterception           = options.OptNoInterception

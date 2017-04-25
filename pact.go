@@ -1,21 +1,21 @@
 /*
-Package Pact provides a set of tools to simplify testing
+Package Gopactor provides a set of tools to simplify testing
 of actors created with Protoactor (https://github.com/AsynkronIT/protoactor-go).
 
 Main features:
 
 Intercept messages
 
-For any actor you want to test, Pact can intercept all it's inbound and outbound
+For any actor you want to test, Gopactor can intercept all it's inbound and outbound
 messages. It can be very useful when you want to test the actor's behavior. Moreover,
 interception forces a naturally asynchronous actor to act in a more synchronous way that
 is much easier to reason about. So, messages are sent and received under the
-control of Pact, step by step.
+control of Gopactor, step by step.
 
 Intercept system messages
 
 Protoactor uses some specific system messages to control the lifecycle of an actor.
-Pact can intercept some of such messages to help you test that your actor stops or restarts
+Gopactor can intercept some of such messages to help you test that your actor stops or restarts
 when expected.
 
 Intercept spawning of children
@@ -26,14 +26,14 @@ Given that child-spawning and communication happen in the background asynchronou
 it can be seen more like a side-effect that can interfere with our tests in many
 unpredictable ways.
 
-So, the current Pact's approach is to intercept all spawn invocations and instead of
+So, the current Gopactor's approach is to intercept all spawn invocations and instead of
 spawning what is requested, spawn no-op null-actors that are guaranteed to not communicate
 with parents in any way. It is planned to evolve this approach to something even more
 useful and configurable in the future.
 
 Goconvey-style assertions
 
-Pact provides a bunch of assertion functions to be used with the very popular testing
+Gopactor provides a bunch of assertion functions to be used with the very popular testing
 framework Goconvey (http://goconvey.co/). For instance,
 
 	So(worker, ShouldReceive, "ping")
@@ -60,7 +60,7 @@ respond "pong" when it receives "ping".
 		"testing"
 
 		"github.com/AsynkronIT/protoactor-go/actor"
-		. "github.com/meAmidos/pact"
+		. "github.com/meAmidos/gopactor"
 		. "github.com/smartystreets/goconvey/convey"
 	)
 
@@ -80,7 +80,7 @@ respond "pong" when it receives "ping".
 	func TestWorker(t *testing.T) {
 		Convey("Test the worker actor", t, func() {
 
-			// It is essential to spawn the tested actor using Pact. This way, Pact
+			// It is essential to spawn the tested actor using Gopactor. This way, Gopactor
 			// will be able to intercept all inbound/outbound messages of the actor.
 			worker, err := SpawnFromInstance(&Worker{}, OptDefault.WithPrefix("worker"))
 			So(err, ShouldBeNil)
@@ -88,7 +88,7 @@ respond "pong" when it receives "ping".
 			// Spawn an additional actor that will communicate with our worker.
 			// The only purpose of this actor is to be a sparring partner,
 			// so we don't care about its functionality.
-			// Conveniently, Pact provides an easy way to create it.
+			// Conveniently, Gopactor provides an easy way to create it.
 			requestor, err := SpawnNullActor()
 			So(err, ShouldBeNil)
 
@@ -107,43 +107,43 @@ respond "pong" when it receives "ping".
 	}
 
 */
-package pact
+package gopactor
 
 import (
 	"github.com/AsynkronIT/protoactor-go/actor"
-	"github.com/meamidos/pact/options"
-	"github.com/meamidos/pact/pact"
+	"github.com/meamidos/gopactor/gopactor"
+	"github.com/meamidos/gopactor/options"
 )
 
 // Analog of Protoactor's actor.SpawnPrefix(actor.FromInstance(...))
-// The main difference is that after spawning with Pact
+// The main difference is that after spawning with Gopactor
 // you can write assertions for the spawned actor.
 func SpawnFromInstance(obj actor.Actor, opts ...options.Options) (*actor.PID, error) {
-	return pact.DEFAULT_PACT.SpawnFromInstance(obj, opts...)
+	return gopactor.DEFAULT_GOPACTOR.SpawnFromInstance(obj, opts...)
 }
 
 // Analog of Protoactor's actor.SpawnPrefix(actor.FromProducer(...))
 func SpawnFromProducer(producer actor.Producer, opts ...options.Options) (*actor.PID, error) {
-	return pact.DEFAULT_PACT.SpawnFromProducer(producer, opts...)
+	return gopactor.DEFAULT_GOPACTOR.SpawnFromProducer(producer, opts...)
 }
 
 // Analog of Protoactor's actor.SpawnPrefix(actor.FromFunc(...))
 func SpawnFromFunc(f actor.ActorFunc, opts ...options.Options) (*actor.PID, error) {
-	return pact.DEFAULT_PACT.SpawnFromFunc(f, opts...)
+	return gopactor.DEFAULT_GOPACTOR.SpawnFromFunc(f, opts...)
 }
 
 // Spawn an actor that does nothing.
 // It can be very useful in tests when all you need is an actor
 // that can play a role of a message sender and a black-hole receiver.
 func SpawnNullActor(opts ...options.Options) (*actor.PID, error) {
-	return pact.DEFAULT_PACT.SpawnNullActor(opts...)
+	return gopactor.DEFAULT_GOPACTOR.SpawnNullActor(opts...)
 }
 
-// PactReset cleans up internal data structures used by Pact.
+// PactReset cleans up internal data structures used by Gopactor.
 // Normally, you do not have to use it. If you just test a dozen of actors
 // in a short-living test, there is no need to care about cleaning up.
 // However, if for some reason, you are spawning thousands of actors in a long-running
 // test, you might want to call this function from time to time.
 func PactReset() {
-	pact.DEFAULT_PACT.Reset()
+	gopactor.DEFAULT_GOPACTOR.Reset()
 }
