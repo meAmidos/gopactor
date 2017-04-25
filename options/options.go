@@ -1,3 +1,25 @@
+// Configuration options that are used by Pact
+// when spawning actors. You can build a custom set of
+// options for every actor you test with Pact.
+//
+// Exmaple
+//
+//   // The actor should use prefix "sender"
+//   // and Pact should only intercept outbound messages
+//   // for this actor.
+//   // In addition, allow extra time when waiting for the actor to send something.
+//   opt1 := OptOutboundInterceptionOnly.WithPrefix("sender").WithTimeout(time.Second)
+//   actor1, _ := SpawnFromInstance(&MyActor{}, opt1)
+//
+//   // Pact should listen only to system messages received by the actor
+//   opt2 := OptNoInterception.WithOutboundInterception()
+//   actor2, _ := SpawnFromInstance(&MyActor{}, opt2)
+//
+//   // Use the default configuration:
+//   // inbound/outbound interception and no interception of system messages.
+//   // In addition, reduce the timeout (default value id 3 milliseconds).
+//   opt3 := OptDefault.WithTimeout(1 * time.Millisecond)
+//   actor3, _ := SpawnFromInstance(&MyActor{}, opt3)
 package options
 
 import "time"
