@@ -19,7 +19,6 @@ func (catcher *Catcher) inboundMiddleware(next actor.ActorFunc) actor.ActorFunc 
 func (catcher *Catcher) processInboundMessage(ctx actor.Context) {
 	message := ctx.Message()
 
-	catcher.tryLogMessage("Received", message)
 	envelope := &Envelope{
 		Sender:  ctx.Sender(),
 		Target:  ctx.Self(),
@@ -52,7 +51,6 @@ func (catcher *Catcher) processOutboundMessage(ctx actor.Context, target *actor.
 	// TODO: Is there a difference between using ctx.Message() and env.Message?
 	message := env.Message
 
-	catcher.tryLogMessage("Sent", message)
 	if !isSystemMessage(message) {
 		catcher.ChUserOutbound <- &Envelope{
 			Sender:  ctx.Self(),
