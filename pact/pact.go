@@ -20,12 +20,12 @@ func (p *Pact) Reset() {
 	p.CatchersByPID = make(map[string]*catcher.Catcher)
 }
 
-func (p *Pact) GetCatcherByPID(pid *actor.PID) *catcher.Catcher {
+func (p *Pact) getCatcherByPID(pid *actor.PID) *catcher.Catcher {
 	return p.CatchersByPID[pid.String()]
 }
 
 func (p *Pact) shouldReceive(receiver, sender *actor.PID, msg interface{}) string {
-	catcher := p.GetCatcherByPID(receiver)
+	catcher := p.getCatcherByPID(receiver)
 	if catcher == nil {
 		return "Receiver is not registered in Pact"
 	}
@@ -34,7 +34,7 @@ func (p *Pact) shouldReceive(receiver, sender *actor.PID, msg interface{}) strin
 }
 
 func (p *Pact) shouldReceiveSysMsg(receiver *actor.PID, msg interface{}) string {
-	catcher := p.GetCatcherByPID(receiver)
+	catcher := p.getCatcherByPID(receiver)
 	if catcher == nil {
 		return "Receiver is not registered in Pact"
 	}
@@ -55,7 +55,7 @@ func (p *Pact) shouldBeRestarting(pid *actor.PID) string {
 }
 
 func (p *Pact) shouldSend(sender, receiver *actor.PID, msg interface{}) string {
-	catcher := p.GetCatcherByPID(sender)
+	catcher := p.getCatcherByPID(sender)
 	if catcher == nil {
 		return "Sender is not registered in Pact"
 	}
@@ -64,7 +64,7 @@ func (p *Pact) shouldSend(sender, receiver *actor.PID, msg interface{}) string {
 }
 
 func (p *Pact) shouldNotSendOrReceive(pid *actor.PID) string {
-	catcher := p.GetCatcherByPID(pid)
+	catcher := p.getCatcherByPID(pid)
 	if catcher == nil {
 		return "Sender is not registered in Pact"
 	}

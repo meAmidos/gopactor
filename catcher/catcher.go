@@ -54,11 +54,11 @@ func (catcher *Catcher) Spawn(props *actor.Props, options ...Options) (*actor.PI
 	catcher.options = opt
 
 	if opt.EnableInboundInterception || opt.EnableSystemInterception {
-		props = props.WithMiddleware(catcher.InboundMiddleware)
+		props = props.WithMiddleware(catcher.inboundMiddleware)
 	}
 
 	if opt.EnableOutboundInterception {
-		props = props.WithOutboundMiddleware(catcher.OutboundMiddleware)
+		props = props.WithOutboundMiddleware(catcher.outboundMiddleware)
 	}
 
 	pid, err := actor.SpawnPrefix(props, opt.Prefix)

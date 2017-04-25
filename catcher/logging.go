@@ -10,7 +10,7 @@ func (catcher *Catcher) StopLogging() {
 	catcher.LoggingOn = false
 }
 
-func (catcher *Catcher) TryLogMessage(text string, msg interface{}) {
+func (catcher *Catcher) tryLogMessage(text string, msg interface{}) {
 	if catcher.LoggingOn {
 		fmt.Printf(`
 %s
