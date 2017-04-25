@@ -10,7 +10,6 @@ import (
 // the catcher followes.
 type Gopactor struct {
 	CatchersByPID map[string]*catcher.Catcher
-	LoggingOn     bool
 }
 
 // New creates a new instance of Gopactor

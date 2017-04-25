@@ -26,8 +26,7 @@ type Catcher struct {
 	// One followed actor per catcher
 	AssignedActor *actor.PID
 
-	LoggingOn bool
-	options   options.Options
+	options options.Options
 }
 
 // This is used for logging purposes only

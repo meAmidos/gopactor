@@ -8,7 +8,6 @@ import (
 
 func (p *Gopactor) spawn(props *actor.Props, opts ...options.Options) (*actor.PID, error) {
 	catcher := catcher.New()
-	catcher.LoggingOn = p.LoggingOn
 
 	pid, err := catcher.Spawn(props, opts...)
 	if err != nil {
