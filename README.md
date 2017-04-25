@@ -69,7 +69,7 @@ func TestWorker(t *testing.T) {
 
 ## Main features
 ### Intercept messages
-For any actor you want to test, Gopactor can intercept all it's inbound and outbound messages. It can be very useful when you want to test the actor's behavior. Moreover, interception forces a naturally asynchronous actor to act in a more synchronous way that is much easier to reason about. So, messages are sent and received under the control of Gopactor, step by step.
+For any actor you want to test, Gopactor can intercept all it's inbound and outbound messages. It is probably exactly what you want to do when you test the actor's behavior. Moreover, interception forces a naturally asynchronous actor to act in a more synchronous way. When messages are sent and received under the control of Gopactor, it is much easier to reason about the actor's logic and examine its communication with the outside world step by step.
 
 ### Intercept system messages
 Protoactor uses some specific system messages to control the lifecycle of an actor. Gopactor can intercept some of such messages to help you test that your actor stops or restarts when expected.
