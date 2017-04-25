@@ -1,9 +1,9 @@
 # Gopactor - testing for ProtoActor
-Gopactor is a set of tools to simplify writing BDD tests for actors created with [Protoactor] (https://github.com/AsynkronIT/protoactor-go).
+Gopactor is a set of tools to simplify writing BDD tests for actors created with [Protoactor](https://github.com/AsynkronIT/protoactor-go).
 
 Currently, the main focus is to provide convenient assertions for tests written using the [Goconvey](http://goconvey.co/) framework. However, all provided assertions can potentially be used independently, and it is easy to write an adapter to whatever matcher/assertion library you prefer.
 
-Any contribution to this project will be higly appreciated!
+Any contribution to this project will be highly appreciated!
 
 ## Example of usage
 Here is a short example. We'll define and test a simple worker actor that can do only one thing: respond "pong" when it receives "ping".
@@ -115,7 +115,7 @@ ShouldBeRestarting
 ```
 
 # Plans
-There are many things that could be done to improve the library. Some of the areas that I am personally interested in (with no particular order):
+Many things could be done to improve the library. Some of the areas that I am personally interested in (with no particular order):
 - Review the interception of child-spawning
 - Add assertions for spawning
 - Catch more system messages
