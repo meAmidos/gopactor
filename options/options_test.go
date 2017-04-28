@@ -18,6 +18,7 @@ func TestOptionsWith(t *testing.T) {
 	a.False(options.InboundInterceptionEnabled)
 	a.False(options.OutboundInterceptionEnabled)
 	a.False(options.SystemInterceptionEnabled)
+	a.False(options.SpawnInterceptionEnabled)
 	a.Empty(options.Prefix)
 	a.Equal(time.Duration(0), options.Timeout)
 
@@ -26,6 +27,7 @@ func TestOptionsWith(t *testing.T) {
 	a.False(options.InboundInterceptionEnabled)
 	a.False(options.OutboundInterceptionEnabled)
 	a.False(options.SystemInterceptionEnabled)
+	a.False(options.SpawnInterceptionEnabled)
 	a.Equal("pref", options.Prefix)
 	a.Equal(time.Duration(0), options.Timeout)
 
@@ -34,6 +36,7 @@ func TestOptionsWith(t *testing.T) {
 	a.False(options.InboundInterceptionEnabled)
 	a.False(options.OutboundInterceptionEnabled)
 	a.False(options.SystemInterceptionEnabled)
+	a.False(options.SpawnInterceptionEnabled)
 	a.Empty(options.Prefix)
 	a.Equal(time.Microsecond, options.Timeout)
 
@@ -42,6 +45,7 @@ func TestOptionsWith(t *testing.T) {
 	a.True(options.InboundInterceptionEnabled)
 	a.False(options.OutboundInterceptionEnabled)
 	a.False(options.SystemInterceptionEnabled)
+	a.False(options.SpawnInterceptionEnabled)
 	a.Empty(options.Prefix)
 	a.Equal(time.Duration(0), options.Timeout)
 
@@ -50,6 +54,7 @@ func TestOptionsWith(t *testing.T) {
 	a.False(options.InboundInterceptionEnabled)
 	a.True(options.OutboundInterceptionEnabled)
 	a.False(options.SystemInterceptionEnabled)
+	a.False(options.SpawnInterceptionEnabled)
 	a.Empty(options.Prefix)
 	a.Equal(time.Duration(0), options.Timeout)
 
@@ -58,6 +63,16 @@ func TestOptionsWith(t *testing.T) {
 	a.False(options.InboundInterceptionEnabled)
 	a.False(options.OutboundInterceptionEnabled)
 	a.True(options.SystemInterceptionEnabled)
+	a.False(options.SpawnInterceptionEnabled)
+	a.Empty(options.Prefix)
+	a.Equal(time.Duration(0), options.Timeout)
+
+	// With spawn interception
+	options = emptyOptions.WithSpawnInterception()
+	a.False(options.InboundInterceptionEnabled)
+	a.False(options.OutboundInterceptionEnabled)
+	a.False(options.SystemInterceptionEnabled)
+	a.True(options.SpawnInterceptionEnabled)
 	a.Empty(options.Prefix)
 	a.Equal(time.Duration(0), options.Timeout)
 }
