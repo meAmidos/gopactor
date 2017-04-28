@@ -26,7 +26,7 @@ type Catcher struct {
 	// One followed actor per catcher
 	AssignedActor *actor.PID
 
-	options options.Options
+	Options options.Options
 }
 
 // This is used for logging purposes only
@@ -58,7 +58,7 @@ func (catcher *Catcher) Spawn(props *actor.Props, opts ...options.Options) (*act
 		opt = opts[0]
 	}
 
-	catcher.options = opt
+	catcher.Options = opt
 
 	if opt.InboundInterceptionEnabled || opt.SystemInterceptionEnabled {
 		props = props.WithMiddleware(catcher.inboundMiddleware)
@@ -85,8 +85,8 @@ func (catcher *Catcher) ShouldReceive(sender *actor.PID, msg interface{}) string
 		} else {
 			return assertInboundMessage(envelope, msg, sender)
 		}
-	case <-time.After(catcher.options.Timeout):
-		return fmt.Sprintf("Timeout %s while waiting for a message", catcher.options.Timeout)
+	case <-time.After(catcher.Options.Timeout):
+		return fmt.Sprintf("Timeout %s while waiting for a message", catcher.Options.Timeout)
 	}
 }
 
@@ -105,8 +105,8 @@ func (catcher *Catcher) ShouldReceiveSysMsg(msg interface{}) string {
 					return ""
 				}
 			}
-		case <-time.After(catcher.options.Timeout):
-			return fmt.Sprintf("Timeout %s while waiting for a system message", catcher.options.Timeout)
+		case <-time.After(catcher.Options.Timeout):
+			return fmt.Sprintf("Timeout %s while waiting for a system message", catcher.Options.Timeout)
 		}
 	}
 }
@@ -119,8 +119,8 @@ func (catcher *Catcher) ShouldSend(receiver *actor.PID, msg interface{}) string 
 		} else {
 			return assertOutboundMessage(envelope, msg, receiver)
 		}
-	case <-time.After(catcher.options.Timeout):
-		return fmt.Sprintf("Timeout %s while waiting for sending", catcher.options.Timeout)
+	case <-time.After(catcher.Options.Timeout):
+		return fmt.Sprintf("Timeout %s while waiting for sending", catcher.Options.Timeout)
 	}
 }
 
@@ -130,7 +130,7 @@ func (catcher *Catcher) ShouldNotSendOrReceive(pid *actor.PID) string {
 		return fmt.Sprintf("Got outbound message: %#v", envelope.Message)
 	case envelope := <-catcher.ChUserInbound:
 		return fmt.Sprintf("Got inbound message: %#v", envelope.Message)
-	case <-time.After(catcher.options.Timeout):
+	case <-time.After(catcher.Options.Timeout):
 		return ""
 	}
 }

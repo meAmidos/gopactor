@@ -26,11 +26,11 @@ func (catcher *Catcher) processInboundMessage(ctx actor.Context) {
 	}
 
 	if !isSystemMessage(message) {
-		if catcher.options.InboundInterceptionEnabled {
+		if catcher.Options.InboundInterceptionEnabled {
 			catcher.ChUserInbound <- envelope
 		}
 	} else {
-		if catcher.options.SystemInterceptionEnabled {
+		if catcher.Options.SystemInterceptionEnabled {
 			catcher.processSystemMessage(envelope)
 		}
 	}
