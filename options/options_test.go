@@ -19,6 +19,7 @@ func TestOptionsWith(t *testing.T) {
 	a.False(options.OutboundInterceptionEnabled)
 	a.False(options.SystemInterceptionEnabled)
 	a.False(options.SpawnInterceptionEnabled)
+	a.False(options.DummySpawningEnabled)
 	a.Empty(options.Prefix)
 	a.Equal(time.Duration(0), options.Timeout)
 
@@ -28,6 +29,7 @@ func TestOptionsWith(t *testing.T) {
 	a.False(options.OutboundInterceptionEnabled)
 	a.False(options.SystemInterceptionEnabled)
 	a.False(options.SpawnInterceptionEnabled)
+	a.False(options.DummySpawningEnabled)
 	a.Equal("pref", options.Prefix)
 	a.Equal(time.Duration(0), options.Timeout)
 
@@ -37,6 +39,7 @@ func TestOptionsWith(t *testing.T) {
 	a.False(options.OutboundInterceptionEnabled)
 	a.False(options.SystemInterceptionEnabled)
 	a.False(options.SpawnInterceptionEnabled)
+	a.False(options.DummySpawningEnabled)
 	a.Empty(options.Prefix)
 	a.Equal(time.Microsecond, options.Timeout)
 
@@ -46,6 +49,7 @@ func TestOptionsWith(t *testing.T) {
 	a.False(options.OutboundInterceptionEnabled)
 	a.False(options.SystemInterceptionEnabled)
 	a.False(options.SpawnInterceptionEnabled)
+	a.False(options.DummySpawningEnabled)
 	a.Empty(options.Prefix)
 	a.Equal(time.Duration(0), options.Timeout)
 
@@ -55,6 +59,7 @@ func TestOptionsWith(t *testing.T) {
 	a.True(options.OutboundInterceptionEnabled)
 	a.False(options.SystemInterceptionEnabled)
 	a.False(options.SpawnInterceptionEnabled)
+	a.False(options.DummySpawningEnabled)
 	a.Empty(options.Prefix)
 	a.Equal(time.Duration(0), options.Timeout)
 
@@ -64,6 +69,7 @@ func TestOptionsWith(t *testing.T) {
 	a.False(options.OutboundInterceptionEnabled)
 	a.True(options.SystemInterceptionEnabled)
 	a.False(options.SpawnInterceptionEnabled)
+	a.False(options.DummySpawningEnabled)
 	a.Empty(options.Prefix)
 	a.Equal(time.Duration(0), options.Timeout)
 
@@ -73,6 +79,17 @@ func TestOptionsWith(t *testing.T) {
 	a.False(options.OutboundInterceptionEnabled)
 	a.False(options.SystemInterceptionEnabled)
 	a.True(options.SpawnInterceptionEnabled)
+	a.False(options.DummySpawningEnabled)
+	a.Empty(options.Prefix)
+	a.Equal(time.Duration(0), options.Timeout)
+
+	// With dummy spawning
+	options = emptyOptions.WithDummySpawning()
+	a.False(options.InboundInterceptionEnabled)
+	a.False(options.OutboundInterceptionEnabled)
+	a.False(options.SystemInterceptionEnabled)
+	a.False(options.SpawnInterceptionEnabled)
+	a.True(options.DummySpawningEnabled)
 	a.Empty(options.Prefix)
 	a.Equal(time.Duration(0), options.Timeout)
 }

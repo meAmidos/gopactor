@@ -42,8 +42,9 @@ type Options struct {
 	OutboundInterceptionEnabled bool
 	SystemInterceptionEnabled   bool
 
-	// Spawning interception
+	// Spawning
 	SpawnInterceptionEnabled bool
+	DummySpawningEnabled     bool
 
 	// A prefix of the spawned actor name.
 	// It is useful mostly in cases when you debug your application
@@ -105,6 +106,12 @@ func (opt Options) WithSystemInterception() Options {
 // WithSpawnInterception is a helper method to add spawning interception to options
 func (opt Options) WithSpawnInterception() Options {
 	opt.SpawnInterceptionEnabled = true
+	return opt
+}
+
+// WithDummySpawning is a helper method to add dummy spawning to options
+func (opt Options) WithDummySpawning() Options {
+	opt.DummySpawningEnabled = true
 	return opt
 }
 
