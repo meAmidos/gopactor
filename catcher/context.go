@@ -18,18 +18,23 @@ func NewContext(catcher *Catcher, ctx actor.Context) *Context {
 	return &Context{catcher, ctx}
 }
 
-// Intercept Spawn calls to create dummy actors instead of real ones
-func (ctx *Context) Spawn(_ *actor.Props) *actor.PID {
-	props := actor.FromInstance(&NullReceiver{})
+func (ctx *Context) Spawn(props *actor.Props) *actor.PID {
+	if ctx.catcher.Options.DummySpawningEnabled {
+		props = actor.FromInstance(&NullReceiver{})
+	}
 	return ctx.Context.Spawn(props)
 }
 
-func (ctx *Context) SpawnPrefix(_ *actor.Props, prefix string) *actor.PID {
-	props := actor.FromInstance(&NullReceiver{})
+func (ctx *Context) SpawnPrefix(props *actor.Props, prefix string) *actor.PID {
+	if ctx.catcher.Options.DummySpawningEnabled {
+		props = actor.FromInstance(&NullReceiver{})
+	}
 	return ctx.Context.SpawnPrefix(props, prefix)
 }
 
-func (ctx *Context) SpawnNamed(_ *actor.Props, id string) (*actor.PID, error) {
-	props := actor.FromInstance(&NullReceiver{})
+func (ctx *Context) SpawnNamed(props *actor.Props, id string) (*actor.PID, error) {
+	if ctx.catcher.Options.DummySpawningEnabled {
+		props = actor.FromInstance(&NullReceiver{})
+	}
 	return ctx.Context.SpawnNamed(props, id)
 }

@@ -60,7 +60,7 @@ func (catcher *Catcher) Spawn(props *actor.Props, opts ...options.Options) (*act
 
 	catcher.Options = opt
 
-	if opt.InboundInterceptionEnabled || opt.SystemInterceptionEnabled {
+	if opt.InboundInterceptionEnabled || opt.SystemInterceptionEnabled || opt.SpawnInterceptionEnabled || opt.DummySpawningEnabled {
 		props = props.WithMiddleware(catcher.inboundMiddleware)
 	}
 
