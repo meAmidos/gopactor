@@ -10,7 +10,7 @@ func (catcher *Catcher) inboundMiddleware(next actor.ActorFunc) actor.ActorFunc 
 
 		// Swap the context with a thin wrapper which intercepts some calls.
 		if _, ok := ctx.(*Context); !ok {
-			ctx = NewContext(ctx)
+			ctx = NewContext(catcher, ctx)
 		}
 		next(ctx)
 	}

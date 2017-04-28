@@ -10,11 +10,12 @@ func (nr *NullReceiver) Receive(ctx actor.Context) {}
 // to intercept calls for testing purposes.
 // This should implement the actor.Context interface
 type Context struct {
+	catcher       *Catcher
 	actor.Context // This is the original context to pass calls to
 }
 
-func NewContext(ctx actor.Context) *Context {
-	return &Context{ctx}
+func NewContext(catcher *Catcher, ctx actor.Context) *Context {
+	return &Context{catcher, ctx}
 }
 
 // Intercept Spawn calls to create dummy actors instead of real ones
