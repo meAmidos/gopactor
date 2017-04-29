@@ -68,6 +68,7 @@ var OptDefault = Options{
 	InboundInterceptionEnabled:  true,
 	OutboundInterceptionEnabled: true,
 	SystemInterceptionEnabled:   false,
+	DummySpawningEnabled:        true,
 	Timeout:                     DEFAULT_TIMEOUT,
 }
 
