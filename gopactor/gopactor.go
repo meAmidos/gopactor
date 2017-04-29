@@ -75,3 +75,12 @@ func (p *Gopactor) shouldNotSendOrReceive(pid *actor.PID) string {
 
 	return catcher.ShouldNotSendOrReceive(pid)
 }
+
+func (p *Gopactor) shouldSpawn(parent *actor.PID, match string) string {
+	catcher := p.getCatcherByPID(parent)
+	if catcher == nil {
+		return "Object is not registered in Gopactor"
+	}
+
+	return catcher.ShouldSpawn(match)
+}

@@ -141,12 +141,7 @@ func (catcher *Catcher) ShouldNotSendOrReceive(pid *actor.PID) string {
 	}
 }
 
-func (catcher *Catcher) ShouldSpawn(params ...string) string {
-	var match string
-	if len(params) == 1 {
-		match = params[0]
-	}
-
+func (catcher *Catcher) ShouldSpawn(match string) string {
 	select {
 	case pid := <-catcher.ChSpawning:
 		if match == "" { // Any spawned actor will suffice
@@ -155,7 +150,7 @@ func (catcher *Catcher) ShouldSpawn(params ...string) string {
 			if strings.Contains(pid.String(), match) {
 				return ""
 			} else {
-				return fmt.Sprintf("The spawned actor has wrong pid %s. It does not contain %s.", pid.String(), match)
+				return assertSpawnedActor(pid, match)
 			}
 		}
 	case <-time.After(catcher.Options.Timeout):

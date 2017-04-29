@@ -144,7 +144,7 @@ func TestCatcher_ContextSpawnInterception(t *testing.T) {
 						res := catch.ShouldSpawn("foobar")
 
 						Convey("Then get an assertion error", func() {
-							So(res, ShouldContainSubstring, "wrong pid")
+							So(res, ShouldContainSubstring, "PID does not match")
 						})
 					})
 
