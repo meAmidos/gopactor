@@ -2,6 +2,7 @@ package catcher
 
 import (
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/AsynkronIT/protoactor-go/actor"
@@ -19,9 +20,13 @@ type Envelope struct {
 // It seats in front of every tested actor and watches for
 // messages and system events.
 type Catcher struct {
+	// Channels for intercepted messages
 	ChSystemInbound chan *Envelope
 	ChUserInbound   chan *Envelope
 	ChUserOutbound  chan *Envelope
+
+	// Channels for intercepted spawning of children
+	ChSpawning chan *actor.PID
 
 	// One followed actor per catcher
 	AssignedActor *actor.PID
@@ -46,6 +51,7 @@ func New() *Catcher {
 		// These are deliberately not buffered to make synchronization points
 		ChUserInbound:  make(chan *Envelope),
 		ChUserOutbound: make(chan *Envelope),
+		ChSpawning:     make(chan *actor.PID),
 	}
 }
 
@@ -114,7 +120,7 @@ func (catcher *Catcher) ShouldReceiveSysMsg(msg interface{}) string {
 func (catcher *Catcher) ShouldSend(receiver *actor.PID, msg interface{}) string {
 	select {
 	case envelope := <-catcher.ChUserOutbound:
-		if msg == nil { // Any message wil suffice
+		if msg == nil { // Any message will suffice
 			return ""
 		} else {
 			return assertOutboundMessage(envelope, msg, receiver)
@@ -132,5 +138,27 @@ func (catcher *Catcher) ShouldNotSendOrReceive(pid *actor.PID) string {
 		return fmt.Sprintf("Got inbound message: %#v", envelope.Message)
 	case <-time.After(catcher.Options.Timeout):
 		return ""
+	}
+}
+
+func (catcher *Catcher) ShouldSpawn(params ...string) string {
+	var match string
+	if len(params) == 1 {
+		match = params[0]
+	}
+
+	select {
+	case pid := <-catcher.ChSpawning:
+		if match == "" { // Any spawned actor will suffice
+			return ""
+		} else {
+			if strings.Contains(pid.String(), match) {
+				return ""
+			} else {
+				return fmt.Sprintf("The spawned actor has wrong pid %s. It does not contain %s.", pid.String(), match)
+			}
+		}
+	case <-time.After(catcher.Options.Timeout):
+		return fmt.Sprintf("Timeout %s while waiting for spawning", catcher.Options.Timeout)
 	}
 }

@@ -1,6 +1,8 @@
 package catcher
 
-import "github.com/AsynkronIT/protoactor-go/actor"
+import (
+	"github.com/AsynkronIT/protoactor-go/actor"
+)
 
 type NullReceiver struct{}
 
@@ -19,22 +21,43 @@ func NewContext(catcher *Catcher, ctx actor.Context) *Context {
 }
 
 func (ctx *Context) Spawn(props *actor.Props) *actor.PID {
-	if ctx.catcher.Options.DummySpawningEnabled {
+	catcher := ctx.catcher
+	if catcher.Options.DummySpawningEnabled {
 		props = actor.FromInstance(&NullReceiver{})
 	}
-	return ctx.Context.Spawn(props)
+
+	pid := ctx.Context.Spawn(props)
+	if catcher.Options.SpawnInterceptionEnabled {
+		catcher.ChSpawning <- pid
+	}
+
+	return pid
 }
 
 func (ctx *Context) SpawnPrefix(props *actor.Props, prefix string) *actor.PID {
-	if ctx.catcher.Options.DummySpawningEnabled {
+	catcher := ctx.catcher
+	if catcher.Options.DummySpawningEnabled {
 		props = actor.FromInstance(&NullReceiver{})
 	}
-	return ctx.Context.SpawnPrefix(props, prefix)
+
+	pid := ctx.Context.SpawnPrefix(props, prefix)
+	if catcher.Options.SpawnInterceptionEnabled {
+		catcher.ChSpawning <- pid
+	}
+
+	return pid
 }
 
 func (ctx *Context) SpawnNamed(props *actor.Props, id string) (*actor.PID, error) {
-	if ctx.catcher.Options.DummySpawningEnabled {
+	catcher := ctx.catcher
+	if catcher.Options.DummySpawningEnabled {
 		props = actor.FromInstance(&NullReceiver{})
 	}
-	return ctx.Context.SpawnNamed(props, id)
+
+	pid, err := ctx.Context.SpawnNamed(props, id)
+	if err == nil && catcher.Options.SpawnInterceptionEnabled {
+		catcher.ChSpawning <- pid
+	}
+
+	return pid, err
 }
