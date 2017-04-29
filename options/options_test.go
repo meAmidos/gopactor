@@ -92,4 +92,14 @@ func TestOptionsWith(t *testing.T) {
 	a.True(options.DummySpawningEnabled)
 	a.Empty(options.Prefix)
 	a.Equal(time.Duration(0), options.Timeout)
+
+	// With real spawning
+	options = emptyOptions.WithRealSpawning()
+	a.False(options.InboundInterceptionEnabled)
+	a.False(options.OutboundInterceptionEnabled)
+	a.False(options.SystemInterceptionEnabled)
+	a.False(options.SpawnInterceptionEnabled)
+	a.False(options.DummySpawningEnabled)
+	a.Empty(options.Prefix)
+	a.Equal(time.Duration(0), options.Timeout)
 }

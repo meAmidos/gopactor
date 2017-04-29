@@ -116,6 +116,12 @@ func (opt Options) WithDummySpawning() Options {
 	return opt
 }
 
+// WithRealSpawning is a helper method to disable dummy spawning in options
+func (opt Options) WithRealSpawning() Options {
+	opt.DummySpawningEnabled = false
+	return opt
+}
+
 // WithPrefix is a helper method to add prefix to options
 func (opt Options) WithPrefix(prefix string) Options {
 	opt.Prefix = prefix
