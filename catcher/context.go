@@ -1,6 +1,8 @@
 package catcher
 
-import "github.com/AsynkronIT/protoactor-go/actor"
+import (
+	"github.com/AsynkronIT/protoactor-go/actor"
+)
 
 type NullReceiver struct{}
 
@@ -10,25 +12,52 @@ func (nr *NullReceiver) Receive(ctx actor.Context) {}
 // to intercept calls for testing purposes.
 // This should implement the actor.Context interface
 type Context struct {
+	catcher       *Catcher
 	actor.Context // This is the original context to pass calls to
 }
 
-func NewContext(ctx actor.Context) *Context {
-	return &Context{ctx}
+func NewContext(catcher *Catcher, ctx actor.Context) *Context {
+	return &Context{catcher, ctx}
 }
 
-// Intercept Spawn calls to create dummy actors instead of real ones
-func (ctx *Context) Spawn(_ *actor.Props) *actor.PID {
-	props := actor.FromInstance(&NullReceiver{})
-	return ctx.Context.Spawn(props)
+func (ctx *Context) Spawn(props *actor.Props) *actor.PID {
+	catcher := ctx.catcher
+	if catcher.Options.DummySpawningEnabled {
+		props = actor.FromInstance(&NullReceiver{})
+	}
+
+	pid := ctx.Context.Spawn(props)
+	if catcher.Options.SpawnInterceptionEnabled {
+		catcher.ChSpawning <- pid
+	}
+
+	return pid
 }
 
-func (ctx *Context) SpawnPrefix(_ *actor.Props, prefix string) *actor.PID {
-	props := actor.FromInstance(&NullReceiver{})
-	return ctx.Context.SpawnPrefix(props, prefix)
+func (ctx *Context) SpawnPrefix(props *actor.Props, prefix string) *actor.PID {
+	catcher := ctx.catcher
+	if catcher.Options.DummySpawningEnabled {
+		props = actor.FromInstance(&NullReceiver{})
+	}
+
+	pid := ctx.Context.SpawnPrefix(props, prefix)
+	if catcher.Options.SpawnInterceptionEnabled {
+		catcher.ChSpawning <- pid
+	}
+
+	return pid
 }
 
-func (ctx *Context) SpawnNamed(_ *actor.Props, id string) (*actor.PID, error) {
-	props := actor.FromInstance(&NullReceiver{})
-	return ctx.Context.SpawnNamed(props, id)
+func (ctx *Context) SpawnNamed(props *actor.Props, id string) (*actor.PID, error) {
+	catcher := ctx.catcher
+	if catcher.Options.DummySpawningEnabled {
+		props = actor.FromInstance(&NullReceiver{})
+	}
+
+	pid, err := ctx.Context.SpawnNamed(props, id)
+	if err == nil && catcher.Options.SpawnInterceptionEnabled {
+		catcher.ChSpawning <- pid
+	}
+
+	return pid, err
 }

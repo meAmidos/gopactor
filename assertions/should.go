@@ -92,3 +92,10 @@ func ShouldStop(actual interface{}, _ ...interface{}) string {
 func ShouldBeRestarting(actual interface{}, _ ...interface{}) string {
 	return gopactor.DEFAULT_GOPACTOR.ShouldBeRestarting(actual)
 }
+
+// ShouldSpawn asserts that the actor spawns a child
+//   So(myActor, ShouldSpawn, "my-child")
+//   So(myActor, ShouldSpawn)
+func ShouldSpawn(actual interface{}, params ...interface{}) string {
+	return gopactor.DEFAULT_GOPACTOR.ShouldSpawn(actual, params...)
+}

@@ -22,4 +22,6 @@ var (
 	ShouldStart        = assertions.ShouldStart
 	ShouldStop         = assertions.ShouldStop
 	ShouldBeRestarting = assertions.ShouldBeRestarting
+
+	ShouldSpawn = assertions.ShouldSpawn
 )

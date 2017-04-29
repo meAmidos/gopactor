@@ -212,3 +212,24 @@ func (p *Gopactor) ShouldNotSendOrReceive(param1 interface{}, _ ...interface{}) 
 
 	return p.shouldNotSendOrReceive(object)
 }
+
+// ShouldSpawn is an assertion method. Its rules are:
+// - The actor should spawn a child
+// - The child's PID should contain a given substing in it
+func (p *Gopactor) ShouldSpawn(param1 interface{}, params ...interface{}) string {
+	object, ok := param1.(*actor.PID)
+	if !ok {
+		return "Object is not an actor PID"
+	}
+
+	var match string
+	if len(params) == 1 {
+		var ok bool
+		match, ok = params[0].(string)
+		if !ok {
+			return "Parameter should be a string"
+		}
+	}
+
+	return p.shouldSpawn(object, match)
+}

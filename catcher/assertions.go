@@ -3,6 +3,7 @@ package catcher
 import (
 	"fmt"
 	"reflect"
+	"strings"
 
 	"github.com/AsynkronIT/protoactor-go/actor"
 )
@@ -46,6 +47,18 @@ Actual: %#v
 
 	if receiver != nil && !receiver.Equal(envelope.Target) {
 		return "Receiver does not match"
+	}
+
+	return ""
+}
+
+func assertSpawnedActor(pid *actor.PID, match string) string {
+	if !strings.Contains(pid.String(), match) {
+		return fmt.Sprintf(`
+The spawned actor's PID does not match
+Expected: %s
+Actual: %s
+`, match, pid)
 	}
 
 	return ""

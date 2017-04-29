@@ -2,6 +2,7 @@ package catcher
 
 import (
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/AsynkronIT/protoactor-go/actor"
@@ -19,14 +20,18 @@ type Envelope struct {
 // It seats in front of every tested actor and watches for
 // messages and system events.
 type Catcher struct {
+	// Channels for intercepted messages
 	ChSystemInbound chan *Envelope
 	ChUserInbound   chan *Envelope
 	ChUserOutbound  chan *Envelope
 
+	// Channels for intercepted spawning of children
+	ChSpawning chan *actor.PID
+
 	// One followed actor per catcher
 	AssignedActor *actor.PID
 
-	options options.Options
+	Options options.Options
 }
 
 // This is used for logging purposes only
@@ -46,6 +51,7 @@ func New() *Catcher {
 		// These are deliberately not buffered to make synchronization points
 		ChUserInbound:  make(chan *Envelope),
 		ChUserOutbound: make(chan *Envelope),
+		ChSpawning:     make(chan *actor.PID),
 	}
 }
 
@@ -58,9 +64,9 @@ func (catcher *Catcher) Spawn(props *actor.Props, opts ...options.Options) (*act
 		opt = opts[0]
 	}
 
-	catcher.options = opt
+	catcher.Options = opt
 
-	if opt.InboundInterceptionEnabled || opt.SystemInterceptionEnabled {
+	if opt.InboundInterceptionEnabled || opt.SystemInterceptionEnabled || opt.SpawnInterceptionEnabled || opt.DummySpawningEnabled {
 		props = props.WithMiddleware(catcher.inboundMiddleware)
 	}
 
@@ -85,8 +91,8 @@ func (catcher *Catcher) ShouldReceive(sender *actor.PID, msg interface{}) string
 		} else {
 			return assertInboundMessage(envelope, msg, sender)
 		}
-	case <-time.After(catcher.options.Timeout):
-		return fmt.Sprintf("Timeout %s while waiting for a message", catcher.options.Timeout)
+	case <-time.After(catcher.Options.Timeout):
+		return fmt.Sprintf("Timeout %s while waiting for a message", catcher.Options.Timeout)
 	}
 }
 
@@ -105,8 +111,8 @@ func (catcher *Catcher) ShouldReceiveSysMsg(msg interface{}) string {
 					return ""
 				}
 			}
-		case <-time.After(catcher.options.Timeout):
-			return fmt.Sprintf("Timeout %s while waiting for a system message", catcher.options.Timeout)
+		case <-time.After(catcher.Options.Timeout):
+			return fmt.Sprintf("Timeout %s while waiting for a system message", catcher.Options.Timeout)
 		}
 	}
 }
@@ -114,13 +120,13 @@ func (catcher *Catcher) ShouldReceiveSysMsg(msg interface{}) string {
 func (catcher *Catcher) ShouldSend(receiver *actor.PID, msg interface{}) string {
 	select {
 	case envelope := <-catcher.ChUserOutbound:
-		if msg == nil { // Any message wil suffice
+		if msg == nil { // Any message will suffice
 			return ""
 		} else {
 			return assertOutboundMessage(envelope, msg, receiver)
 		}
-	case <-time.After(catcher.options.Timeout):
-		return fmt.Sprintf("Timeout %s while waiting for sending", catcher.options.Timeout)
+	case <-time.After(catcher.Options.Timeout):
+		return fmt.Sprintf("Timeout %s while waiting for sending", catcher.Options.Timeout)
 	}
 }
 
@@ -130,7 +136,24 @@ func (catcher *Catcher) ShouldNotSendOrReceive(pid *actor.PID) string {
 		return fmt.Sprintf("Got outbound message: %#v", envelope.Message)
 	case envelope := <-catcher.ChUserInbound:
 		return fmt.Sprintf("Got inbound message: %#v", envelope.Message)
-	case <-time.After(catcher.options.Timeout):
+	case <-time.After(catcher.Options.Timeout):
 		return ""
+	}
+}
+
+func (catcher *Catcher) ShouldSpawn(match string) string {
+	select {
+	case pid := <-catcher.ChSpawning:
+		if match == "" { // Any spawned actor will suffice
+			return ""
+		} else {
+			if strings.Contains(pid.String(), match) {
+				return ""
+			} else {
+				return assertSpawnedActor(pid, match)
+			}
+		}
+	case <-time.After(catcher.Options.Timeout):
+		return fmt.Sprintf("Timeout %s while waiting for spawning", catcher.Options.Timeout)
 	}
 }

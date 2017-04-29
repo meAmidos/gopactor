@@ -37,9 +37,14 @@ const DEFAULT_TIMEOUT = 3 * time.Millisecond
 // For each actor you test with Gopactor, you can build a custom set of
 // options.
 type Options struct {
+	// Which messages to intercept
 	InboundInterceptionEnabled  bool
 	OutboundInterceptionEnabled bool
 	SystemInterceptionEnabled   bool
+
+	// Spawning
+	SpawnInterceptionEnabled bool
+	DummySpawningEnabled     bool
 
 	// A prefix of the spawned actor name.
 	// It is useful mostly in cases when you debug your application
@@ -95,6 +100,18 @@ func (opt Options) WithOutboundInterception() Options {
 // WithSystemInterception is a helper method to add system messages interception to options
 func (opt Options) WithSystemInterception() Options {
 	opt.SystemInterceptionEnabled = true
+	return opt
+}
+
+// WithSpawnInterception is a helper method to add spawning interception to options
+func (opt Options) WithSpawnInterception() Options {
+	opt.SpawnInterceptionEnabled = true
+	return opt
+}
+
+// WithDummySpawning is a helper method to add dummy spawning to options
+func (opt Options) WithDummySpawning() Options {
+	opt.DummySpawningEnabled = true
 	return opt
 }
 

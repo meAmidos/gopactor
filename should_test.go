@@ -405,3 +405,41 @@ func TestShouldBeRestarting(t *testing.T) {
 	// Cleanup
 	PactReset()
 }
+
+func TestShouldSpawn(t *testing.T) {
+	a := assert.New(t)
+
+	receiver, _ := SpawnFromFunc(func(ctx actor.Context) {}, OptNoInterception.WithPrefix("rcv"))
+	childProps := actor.FromFunc(func(ctx actor.Context) {})
+	parent, _ := SpawnFromFunc(func(ctx actor.Context) {
+		switch m := ctx.Message().(type) {
+		case string:
+			if m == "spawn" && ctx.Sender() != nil {
+				child := ctx.SpawnPrefix(childProps, "my-dear-dummy")
+				ctx.Respond(child)
+			}
+		}
+	}, options.OptNoInterception.WithSpawnInterception().WithPrefix("parent"))
+
+	// Wrong params
+	a.Contains(ShouldSpawn(nil), "not an actor PID")
+	a.Contains(ShouldSpawn(parent, 123), "should be a string")
+
+	// Failure: Timeout
+	a.Contains(ShouldSpawn(parent), "Timeout")
+
+	// Failure: child PID mismatch
+	parent.Request("spawn", receiver)
+	a.Contains(ShouldSpawn(parent, "foobar"), "does not match")
+
+	// Success: child PID match
+	parent.Request("spawn", receiver)
+	a.Empty(ShouldSpawn(parent, "my-dear-dummy"))
+
+	// Success: any child PID is ok
+	parent.Request("spawn", receiver)
+	a.Empty(ShouldSpawn(parent))
+
+	// Cleanup
+	PactReset()
+}
