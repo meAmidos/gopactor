@@ -7,69 +7,83 @@ import (
 	"github.com/meamidos/gopactor/catcher"
 	"github.com/meamidos/gopactor/options"
 	. "github.com/smartystreets/goconvey/convey"
-	"github.com/stretchr/testify/assert"
 )
 
 type Child struct{}
 
 func TestCatcher_ContextSpawnDummy(t *testing.T) {
-	a := assert.New(t)
+	Convey("Subject: Spawn dummy actors", t, func() {
+		Convey("Given a catcher and parent/child definitions", func() {
+			catch := catcher.New()
 
-	// Define a child that can respond to ping
-	childProps := actor.FromFunc(func(ctx actor.Context) {
-		switch m := ctx.Message().(type) {
-		case string:
-			if m == "ping" && ctx.Sender() != nil {
-				ctx.Respond("pong")
-			}
-		}
+			// Define a child that can respond to ping
+			childProps := actor.FromFunc(func(ctx actor.Context) {
+				switch m := ctx.Message().(type) {
+				case string:
+					if m == "ping" && ctx.Sender() != nil {
+						ctx.Respond("pong")
+					}
+				}
+			})
+
+			// Define a parent that can spawn a child when asked to.
+			// If a child is spawned, it's PID is sent back to the requestor.
+			parentProps := actor.FromFunc(func(ctx actor.Context) {
+				switch m := ctx.Message().(type) {
+				case string:
+					if m == "spawn" && ctx.Sender() != nil {
+						child := ctx.Spawn(childProps)
+						ctx.Respond(child)
+					}
+				}
+			})
+
+			Convey("And a parent is created without the dummy spawning", func() {
+				parent, err := catch.Spawn(parentProps, options.OptNoInterception)
+				So(err, ShouldBeNil)
+
+				Convey("When spawning a child", func() {
+					res, err := parent.RequestFuture("spawn", options.DEFAULT_TIMEOUT).Result()
+					So(err, ShouldBeNil)
+					child, ok := res.(*actor.PID)
+					So(ok, ShouldBeTrue)
+
+					Convey("And sending a ping to it", func() {
+						res, err = child.RequestFuture("ping", options.DEFAULT_TIMEOUT).Result()
+
+						Convey("Then receive a pong in return", func() {
+							So(err, ShouldBeNil)
+							resp, ok := res.(string)
+							So(ok, ShouldBeTrue)
+							So(resp, ShouldEqual, "pong")
+						})
+					})
+				})
+			})
+
+			Convey("And a parent is created with the dummy spawning enabled", func() {
+				parent, err := catch.Spawn(parentProps, options.OptNoInterception.WithDummySpawning())
+				So(err, ShouldBeNil)
+
+				Convey("When spawning a child", func() {
+					res, err := parent.RequestFuture("spawn", options.DEFAULT_TIMEOUT).Result()
+					So(err, ShouldBeNil)
+					child, ok := res.(*actor.PID)
+					So(ok, ShouldBeTrue)
+
+					Convey("And sending a ping to it", func() {
+						res, err = child.RequestFuture("ping", options.DEFAULT_TIMEOUT).Result()
+
+						// Becuase the child is a dummy actor
+						Convey("Then receive nothing in return", func() {
+							So(err, ShouldNotBeNil)
+							So(err.Error(), ShouldContainSubstring, "timeout")
+						})
+					})
+				})
+			})
+		})
 	})
-
-	// Define a parent that can spawn a child when asked to.
-	// If a child is spawned, it's PID is sent back to the requestor.
-	parentProps := actor.FromFunc(func(ctx actor.Context) {
-		switch m := ctx.Message().(type) {
-		case string:
-			if m == "spawn" && ctx.Sender() != nil {
-				child := ctx.Spawn(childProps)
-				ctx.Respond(child)
-			}
-		}
-	})
-
-	catch := catcher.New()
-
-	// Case 1: A parent without the dummy spawning
-	parent, err := catch.Spawn(parentProps, options.OptNoInterception)
-	a.Nil(err)
-
-	// Spawn a child and get its PID
-	res, err := parent.RequestFuture("spawn", options.DEFAULT_TIMEOUT).Result()
-	a.Nil(err)
-	child, ok := res.(*actor.PID)
-	a.True(ok)
-
-	// Send a ping to the child and receive a pong in return.
-	res, err = child.RequestFuture("ping", options.DEFAULT_TIMEOUT).Result()
-	a.Nil(err)
-	resp, ok := res.(string)
-	a.True(ok)
-	a.Equal("pong", resp)
-
-	// Case 2: A parent with the dummy spawning enabled
-	parent, err = catch.Spawn(parentProps, options.OptNoInterception.WithDummySpawning())
-	a.Nil(err)
-
-	// Spawn a child and get its PID
-	res, err = parent.RequestFuture("spawn", options.DEFAULT_TIMEOUT).Result()
-	a.Nil(err)
-	child, ok = res.(*actor.PID)
-	a.True(ok)
-
-	// Send a ping to the child and receive nothing because the child is a dummy actor
-	res, err = child.RequestFuture("ping", options.DEFAULT_TIMEOUT).Result()
-	a.Error(err)
-	a.Contains(err.Error(), "timeout")
 }
 
 func TestCatcher_ContextSpawnInterception(t *testing.T) {
