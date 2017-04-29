@@ -58,6 +58,7 @@ type Options struct {
 
 // OptNoInterception is one of predefined configurations:
 // - interception is disabled
+// - no dummy spawning
 var OptNoInterception = Options{
 	Timeout: DEFAULT_TIMEOUT,
 }
@@ -74,15 +75,19 @@ var OptDefault = Options{
 
 // OptOutboundInterceptionOnly is one of predefined configurations:
 // - intercept outbound messages only
+// - dummy spawning is enabled
 var OptOutboundInterceptionOnly = Options{
 	OutboundInterceptionEnabled: true,
+	DummySpawningEnabled:        true,
 	Timeout:                     DEFAULT_TIMEOUT,
 }
 
 // OptInboundInterceptionOnly is one of predefined configurations:
 // - intercept inbound messages only
+// - dummy spawning is enabled
 var OptInboundInterceptionOnly = Options{
 	InboundInterceptionEnabled: true,
+	DummySpawningEnabled:       true,
 	Timeout:                    DEFAULT_TIMEOUT,
 }
 
