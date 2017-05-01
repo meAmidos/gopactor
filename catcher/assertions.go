@@ -8,8 +8,12 @@ import (
 	"github.com/AsynkronIT/protoactor-go/actor"
 )
 
+func messagesMatch(msg1, msg2 interface{}) bool {
+	return reflect.DeepEqual(msg1, msg2)
+}
+
 func assertInboundMessage(envelope *Envelope, msg interface{}, sender *actor.PID) string {
-	if !reflect.DeepEqual(envelope.Message, msg) {
+	if !messagesMatch(envelope.Message, msg) {
 		return fmt.Sprintf(`
 Messages do not match
 Expected: %#v
@@ -37,7 +41,7 @@ Actual: %#v
 }
 
 func assertOutboundMessage(envelope *Envelope, msg interface{}, receiver *actor.PID) string {
-	if !reflect.DeepEqual(envelope.Message, msg) {
+	if !messagesMatch(envelope.Message, msg) {
 		return fmt.Sprintf(`
 Messages do not match
 Expected: %#v
