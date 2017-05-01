@@ -93,6 +93,13 @@ func ShouldBeRestarting(actual interface{}, _ ...interface{}) string {
 	return gopactor.DEFAULT_GOPACTOR.ShouldBeRestarting(actual)
 }
 
+// ShouldObserveTermination asserts that the actor is notified when another actor is terminated.
+//   So(myActor, ShouldObserveTermination)
+//   So(myActor, ShouldObserveTermination, anotherActorPID)
+func ShouldObserveTermination(actual interface{}, params ...interface{}) string {
+	return gopactor.DEFAULT_GOPACTOR.ShouldObserveTermination(actual, params...)
+}
+
 // ShouldSpawn asserts that the actor spawns a child
 //   So(myActor, ShouldSpawn, "my-child")
 //   So(myActor, ShouldSpawn)

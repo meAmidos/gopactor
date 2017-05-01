@@ -406,6 +406,55 @@ func TestShouldBeRestarting(t *testing.T) {
 	PactReset()
 }
 
+func TestShouldObserveTermination(t *testing.T) {
+	a := assert.New(t)
+
+	childProps := actor.FromFunc(func(ctx actor.Context) {})
+
+	getParentChildSet := func() (*actor.PID, *actor.PID) {
+		var child *actor.PID
+		wait := make(chan bool)
+		parent, _ := SpawnFromFunc(func(ctx actor.Context) {
+			switch ctx.Message().(type) {
+			case *actor.Started:
+				child = ctx.SpawnPrefix(childProps, "child")
+				wait <- true
+			}
+		}, options.OptNoInterception.WithSystemInterception().WithPrefix("parent"))
+
+		<-wait
+
+		return parent, child
+	}
+
+	someActor, _ := SpawnNullActor()
+
+	// Wrong params
+	parent1, child1 := getParentChildSet()
+	a.Contains(ShouldObserveTermination(nil), "not an actor PID")
+	a.Contains(ShouldObserveTermination(parent1, nil), "should be an actor PID")
+
+	// Failure: Timeout
+	a.Contains(ShouldObserveTermination(parent1, child1), "Timeout")
+
+	// Failure: pid mismatch
+	child1.Stop()
+	a.Contains(ShouldObserveTermination(parent1, someActor), "Timeout")
+
+	// Success: Termination of the child
+	parent2, child2 := getParentChildSet()
+	child2.Stop()
+	a.Empty(ShouldObserveTermination(parent2, child2))
+
+	// Success: Any termination
+	parent3, child3 := getParentChildSet()
+	child3.Stop()
+	a.Empty(ShouldObserveTermination(parent3))
+
+	// Cleanup
+	PactReset()
+}
+
 func TestShouldSpawn(t *testing.T) {
 	a := assert.New(t)
 

@@ -8,8 +8,25 @@ import (
 	"github.com/AsynkronIT/protoactor-go/actor"
 )
 
+func messagesMatch(actual, expected interface{}) bool {
+	// Special case: compare Terminated messages
+	// For the sake of simplicity, leave aside the AddressTerminated field of the messages.
+	if termActual, ok := actual.(*actor.Terminated); ok {
+		if termExpected, ok := expected.(*actor.Terminated); ok {
+			// Any Terminated message will suffice
+			if termExpected.Who == nil {
+				return true
+			}
+
+			return termActual.Who.String() == termExpected.Who.String()
+		}
+	}
+
+	return reflect.DeepEqual(actual, expected)
+}
+
 func assertInboundMessage(envelope *Envelope, msg interface{}, sender *actor.PID) string {
-	if !reflect.DeepEqual(envelope.Message, msg) {
+	if !messagesMatch(envelope.Message, msg) {
 		return fmt.Sprintf(`
 Messages do not match
 Expected: %#v
@@ -37,7 +54,7 @@ Actual: %#v
 }
 
 func assertOutboundMessage(envelope *Envelope, msg interface{}, receiver *actor.PID) string {
-	if !reflect.DeepEqual(envelope.Message, msg) {
+	if !messagesMatch(envelope.Message, msg) {
 		return fmt.Sprintf(`
 Messages do not match
 Expected: %#v
