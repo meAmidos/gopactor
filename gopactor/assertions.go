@@ -120,6 +120,26 @@ func (p *Gopactor) ShouldBeRestarting(param1 interface{}, _ ...interface{}) stri
 	return p.shouldBeRestarting(pid)
 }
 
+// ShouldObserveTermination is an assertion method. Its rules are:
+// - The actor should receive a notification that another actor has been terminated
+func (p *Gopactor) ShouldObserveTermination(param1 interface{}, params ...interface{}) string {
+	object, ok := param1.(*actor.PID)
+	if !ok {
+		return "Object is not an actor PID"
+	}
+
+	var pid *actor.PID
+	if len(params) == 1 {
+		var ok bool
+		pid, ok = params[0].(*actor.PID)
+		if !ok {
+			return "Parameter should be an actor PID"
+		}
+	}
+
+	return p.shouldObserveTermination(object, pid)
+}
+
 // ShouldSend is an assertion method. Its rules are:
 // - The sender should send one given message.
 // - It does not matter who is the receiver of the message.

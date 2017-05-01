@@ -19,9 +19,10 @@ var (
 
 	ShouldNotSendOrReceive = assertions.ShouldNotSendOrReceive
 
-	ShouldStart        = assertions.ShouldStart
-	ShouldStop         = assertions.ShouldStop
-	ShouldBeRestarting = assertions.ShouldBeRestarting
+	ShouldStart              = assertions.ShouldStart
+	ShouldStop               = assertions.ShouldStop
+	ShouldBeRestarting       = assertions.ShouldBeRestarting
+	ShouldObserveTermination = assertions.ShouldObserveTermination
 
 	ShouldSpawn = assertions.ShouldSpawn
 )

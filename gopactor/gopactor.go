@@ -58,6 +58,10 @@ func (p *Gopactor) shouldBeRestarting(pid *actor.PID) string {
 	return p.shouldReceiveSysMsg(pid, &actor.Restarting{})
 }
 
+func (p *Gopactor) shouldObserveTermination(object, pid *actor.PID) string {
+	return p.shouldReceiveSysMsg(object, &actor.Terminated{Who: pid})
+}
+
 func (p *Gopactor) shouldSend(sender, receiver *actor.PID, msg interface{}) string {
 	catcher := p.getCatcherByPID(sender)
 	if catcher == nil {
