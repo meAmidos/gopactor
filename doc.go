@@ -106,7 +106,5 @@ respond "pong" when it receives "ping".
 			So(requestor, ShouldReceive, "pong")
 		})
 	}
-
 */
-
 package gopactor
