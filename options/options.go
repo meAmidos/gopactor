@@ -7,6 +7,7 @@
 //   // Let's build a set of options with these requirements:
 //   // - The actor should be spawned with prefix "sender".
 //   // - Gopactor should only intercept outbound messages for this actor.
+//   // - Spawn no-op dummy children actors (enabled by default)
 //   // - In addition, allow extra time when waiting for the actor to send something.
 //   opt1 := OptOutboundInterceptionOnly.WithPrefix("sender").WithTimeout(time.Second)
 //   actor1, _ := SpawnFromInstance(&MyActor{}, opt1)
@@ -18,10 +19,17 @@
 //
 //   // Use the default configuration:
 //   // - Inbound and outbound interception.
+//   // - Spawn no-op dummy children actors
 //   // - No interception of system messages.
 //   // - In addition, reduce the timeout (default value id 3 milliseconds).
 //   opt3 := OptDefault.WithTimeout(1 * time.Millisecond)
 //   actor3, _ := SpawnFromInstance(&MyActor{}, opt3)
+//
+//   // Focus on spawning:
+//   // - Intercept only spawning
+//   // - Do not spawn dummy no-op children actors
+//   opt4 := OptNoInterception.WithSpawnInterception()
+//   actor4, _ := SpawnFromInstance(&MyActor{}, opt4)
 package options
 
 import "time"

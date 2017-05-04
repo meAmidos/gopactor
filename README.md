@@ -79,7 +79,7 @@ Protoactor uses some specific system messages to control the lifecycle of an act
 ### Intercept spawning of children
 It is a common pattern to let actors spawn child actors and communicate with them. Good as it is, this pattern often stays in the way of writing deterministic tests. Given that child-spawning and communication happen in the background asynchronously, it can be seen more like a side-effect that can interfere with our tests in many unpredictable ways.
 
-So, the current Gopactor's approach is to intercept all spawn invocations and instead of spawning what is requested, spawn no-op null-actors that are guaranteed to not communicate with parents in any way. It is planned to evolve this approach to something even more useful and configurable in the future.
+By default, Gopactor intercepts all spawn invocations and instead of spawning what is requested, it spawns no-op null-actors. These actors are guaranteed to not communicate with their parents in any way. If you do no want Gopactor to substitute spawned actors, you can easily disable this behavior via configuration options.
 
 ### Goconvey-style assertions
 Gopactor provides a bunch of assertion functions to be used with the very popular testing framework Goconvey (http://goconvey.co/). For instance,
@@ -116,17 +116,21 @@ ShouldNotSendOrReceive
 ShouldStart
 ShouldStop
 ShouldBeRestarting
+ShouldObserveTermination
+
+ShouldSpawn
 ```
 
 # Plans
 Many things could be done to improve the library. Some of the areas that I am personally interested in (with no particular order):
-- Review the interception of child-spawning
-- Add assertions for spawning
-- Catch more system messages
-- Add an optional logger
-- Add negative-scenario assertions (`ShouldNotReceive`, etc.)
-- Be smart in handling/asserting actors failures
-- Handle outbound system messages separately
+- [x] Review the interception of child-spawning
+- [x] Add assertions for spawning
+- [ ] Ensure thread safety
+- [ ] Catch more system messages
+- [ ] Add an optional logger
+- [ ] Add negative-scenario assertions (`ShouldNotReceive`, etc.)
+- [ ] Be smart in handling/asserting actors failures
+- [ ] Handle outbound system messages separately
 
 # Contribution
 Please feel free to open an issue if you encounter a problem with the library or have a question. Pull requests will be highly appreciated.

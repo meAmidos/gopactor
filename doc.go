@@ -26,9 +26,10 @@ Given that child-spawning and communication happen in the background asynchronou
 it can be seen more like a side-effect that can interfere with your tests in many
 unpredictable ways.
 
-The current Gopactor's approach is to intercept all spawn invocations and instead of
-spawning what is requested, spawn no-op null-actors. These actors are guaranteed
-to not communicate with their parents in any way.
+By default, Gopactor intercepts all spawn invocations and instead of spawning what is
+requested, it spawns no-op null-actors. These actors are guaranteed to not communicate
+with their parents in any way. If you do no want Gopactor to substitute spawned actors,
+you can easily disable this behavior via configuration options.
 
 Goconvey-style assertions
 
@@ -41,7 +42,8 @@ framework Goconvey (http://goconvey.co/). For instance,
 Configurable
 
 For every tested actor, you can define what you want to intercept: inbound, outbound
-or system messages. Or everything. Or nothing at all. You can also set a custom timeout:
+or system messages. Or spawning of children. Or everything. Or nothing at all.
+You can also set a custom timeout:
 
 	options := OptNoInterception.
 		WithOutboundInterception().
@@ -106,3 +108,5 @@ respond "pong" when it receives "ping".
 	}
 
 */
+
+package gopactor
