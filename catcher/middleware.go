@@ -41,10 +41,16 @@ func (catcher *Catcher) processSystemMessage(envelope *Envelope) {
 }
 
 func (catcher *Catcher) outboundMiddleware(next actor.SenderFunc) actor.SenderFunc {
-	return func(ctx actor.Context, target *actor.PID, env actor.MessageEnvelope) {
+	fn := actor.SenderFunc(func(ctx actor.Context, target *actor.PID, env actor.MessageEnvelope) {
+		catcher.processOutboundMessage(ctx, target, env)
+		next(ctx, target, &env)
+	})
+
+	return fn
+	/*	return func(ctx actor.Context, target *actor.PID, env actor.MessageEnvelope)  {
 		catcher.processOutboundMessage(ctx, target, env)
 		next(ctx, target, env)
-	}
+	}*/
 }
 
 func (catcher *Catcher) processOutboundMessage(ctx actor.Context, target *actor.PID, env actor.MessageEnvelope) {
