@@ -1,0 +1,29 @@
+<component name="libraryTable">
+  <library name="GOPATH &lt;gopactor&gt;">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/../github.com" />
+      <root url="file://$PROJECT_DIR$/../gopkg.in" />
+      <root url="file://$PROJECT_DIR$/../golang.org" />
+      <root url="file://$PROJECT_DIR$/../google.golang.org" />
+      <root url="file://$PROJECT_DIR$/../sourcegraph.com" />
+      <root url="file://$PROJECT_DIR$/../tokengen" />
+      <root url="file://$PROJECT_DIR$/../go-eventsocket" />
+      <root url="file://$PROJECT_DIR$/../protoactor-go-testkit" />
+      <root url="file://$PROJECT_DIR$/../gowash" />
+    </CLASSES>
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/../github.com" />
+      <root url="file://$PROJECT_DIR$/../gopkg.in" />
+      <root url="file://$PROJECT_DIR$/../golang.org" />
+      <root url="file://$PROJECT_DIR$/../google.golang.org" />
+      <root url="file://$PROJECT_DIR$/../sourcegraph.com" />
+      <root url="file://$PROJECT_DIR$/../tokengen" />
+      <root url="file://$PROJECT_DIR$/../go-eventsocket" />
+      <root url="file://$PROJECT_DIR$/../protoactor-go-testkit" />
+      <root url="file://$PROJECT_DIR$/../gowash" />
+    </SOURCES>
+    <excluded>
+      <root url="file://$PROJECT_DIR$" />
+    </excluded>
+  </library>
+</component>

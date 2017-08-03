@@ -4,9 +4,9 @@ import (
 	"testing"
 
 	"github.com/AsynkronIT/protoactor-go/actor"
-	"github.com/meamidos/gopactor/catcher"
-	"github.com/meamidos/gopactor/options"
 	. "github.com/smartystreets/goconvey/convey"
+	"gopactor/catcher"
+	"gopactor/options"
 )
 
 type Child struct{}

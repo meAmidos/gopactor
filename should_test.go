@@ -4,8 +4,8 @@ import (
 	"testing"
 
 	"github.com/AsynkronIT/protoactor-go/actor"
-	"github.com/meamidos/gopactor/options"
 	"github.com/stretchr/testify/assert"
+	"gopactor/options"
 )
 
 func TestShouldReceive(t *testing.T) {

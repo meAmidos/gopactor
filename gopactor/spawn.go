@@ -2,8 +2,9 @@ package gopactor
 
 import (
 	"github.com/AsynkronIT/protoactor-go/actor"
-	"github.com/meamidos/gopactor/catcher"
-	"github.com/meamidos/gopactor/options"
+
+	"gopactor/catcher"
+	"gopactor/options"
 )
 
 func (p *Gopactor) spawn(props *actor.Props, opts ...options.Options) (*actor.PID, error) {
