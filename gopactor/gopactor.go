@@ -2,7 +2,7 @@ package gopactor
 
 import (
 	"github.com/AsynkronIT/protoactor-go/actor"
-	"github.com/meamidos/gopactor/catcher"
+	"gopactor/catcher"
 )
 
 // Gopactor represents a group catchers.

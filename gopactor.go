@@ -2,8 +2,8 @@ package gopactor
 
 import (
 	"github.com/AsynkronIT/protoactor-go/actor"
-	"github.com/meamidos/gopactor/gopactor"
-	"github.com/meamidos/gopactor/options"
+	"gopactor/gopactor"
+	"gopactor/options"
 )
 
 // Analog of Protoactor's actor.SpawnPrefix(actor.FromInstance(...))

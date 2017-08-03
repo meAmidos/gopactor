@@ -6,7 +6,8 @@ import (
 	"time"
 
 	"github.com/AsynkronIT/protoactor-go/actor"
-	"github.com/meamidos/gopactor/options"
+
+	"gopactor/options"
 )
 
 // Envelope is a wrapper that is used for all intercepted messages

@@ -41,13 +41,17 @@ func (catcher *Catcher) processSystemMessage(envelope *Envelope) {
 }
 
 func (catcher *Catcher) outboundMiddleware(next actor.SenderFunc) actor.SenderFunc {
-	return func(ctx actor.Context, target *actor.PID, env actor.MessageEnvelope) {
+	return func(ctx actor.Context, target *actor.PID, env *actor.MessageEnvelope) {
 		catcher.processOutboundMessage(ctx, target, env)
 		next(ctx, target, env)
 	}
+	/*	return func(ctx actor.Context, target *actor.PID, env actor.MessageEnvelope) {
+		catcher.processOutboundMessage(ctx, target, &env)
+		next(ctx, target, &env)
+	}*/
 }
 
-func (catcher *Catcher) processOutboundMessage(ctx actor.Context, target *actor.PID, env actor.MessageEnvelope) {
+func (catcher *Catcher) processOutboundMessage(ctx actor.Context, target *actor.PID, env *actor.MessageEnvelope) {
 	// TODO: Is there a difference between using ctx.Message() and env.Message?
 	message := env.Message
 

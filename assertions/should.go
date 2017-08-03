@@ -4,7 +4,7 @@
 // but rather import the higher level "github.com/meAmidos/gopactor".
 package assertions
 
-import "github.com/meamidos/gopactor/gopactor"
+import "gopactor/gopactor"
 
 // ShouldReceive asserts that a given message is received by the actor
 // and it does not matter who is the sender:

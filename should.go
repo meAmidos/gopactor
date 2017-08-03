@@ -1,6 +1,6 @@
 package gopactor
 
-import "github.com/meamidos/gopactor/assertions"
+import "gopactor/assertions"
 
 // These assertions are mostly self-explanatory,
 // but it may be helpful to go through some examples

@@ -4,8 +4,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/meamidos/gopactor/options"
 	"github.com/stretchr/testify/assert"
+	"gopactor/options"
 )
 
 func TestOptionsWith(t *testing.T) {
